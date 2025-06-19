@@ -7,6 +7,7 @@ import { PropsWithChildren, useContext, useEffect, useMemo, useRef, useState } f
 import DocList from '../chat/doc-list';
 import DocUpload from '../chat/doc-upload';
 import PromptBot from './prompt-bot';
+import { Send } from 'lucide-react';
 
 type TextAreaProps = Omit<Parameters<typeof Input.TextArea>[0], 'value' | 'onPressEnter' | 'onChange' | 'onSubmit'>;
 
@@ -94,7 +95,7 @@ function CompletionInput({
         size='large'
         type='text'
         loading={loading}
-        icon={<SendOutlined />}
+        icon={<Send className="w-5 h-5" />}
         onClick={() => {
           onSubmit(userInput);
         }}

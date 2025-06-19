@@ -2,7 +2,7 @@ import { ChatContext } from '@/app/chat-context';
 import { apiInterceptors, getFlowNodes } from '@/client/api';
 import { IFlowNode } from '@/types/flow';
 import { FLOW_NODES_KEY } from '@/utils';
-import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { CollapseProps } from 'antd';
 import { Badge, Collapse, Input, Layout, Space, Switch } from 'antd';
 import classnames from 'classnames';
@@ -190,7 +190,7 @@ const AddNodesSider: React.FC = () => {
       collapsible={true}
       collapsed={collapsed}
       collapsedWidth={0}
-      trigger={collapsed ? <CaretRightOutlined className='text-base' /> : <CaretLeftOutlined className='text-base' />}
+      trigger={collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
       zeroWidthTriggerStyle={triggerStyle}
       onCollapse={collapsed => setCollapsed(collapsed)}
     >

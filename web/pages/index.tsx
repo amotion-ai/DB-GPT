@@ -16,6 +16,7 @@ import IconFont from '@/new-components/common/Icon';
 import BlurredCard from '@/new-components/common/blurredCard';
 import { AppListResponse } from '@/types/app';
 import moment from 'moment';
+import { Plus, Search, Star } from 'lucide-react';
 
 const Playground: NextPage = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const Playground: NextPage = () => {
   const { setAgent, setCurrentDialogInfo, model } = useContext(ChatContext);
 
   const [activeKey, setActiveKey] = useState<string>('all');
-  const [apps, setApps] = useState<any>({
+  const [apps, setApps] = useState<AppListResponse>({
     app_list: [],
     total_count: 0,
   });
@@ -61,7 +62,7 @@ const Playground: NextPage = () => {
     );
   // 获取应用列表
   const { run: getAppListFn, loading } = useRequest(
-    async (app_name = '', page_no = '1', page_size = '12') => {
+    async (app_name = '', page_no = '1', page_size = '12'): Promise<[any, [] | AppListResponse]> => {
       switch (activeKey) {
         case 'recommend':
           return await getHotAppList({
@@ -80,45 +81,38 @@ const Playground: NextPage = () => {
             ignore_user: 'true',
             published: 'true',
             need_owner_info: 'true',
-
             ...{ app_name, page_no, page_size },
           });
         default:
-          return [];
+          return [null, []];
       }
     },
     {
       manual: true,
       onSuccess: (res: [any, [] | AppListResponse]) => {
         const [_error, data] = res;
-        if (activeKey === 'recommend') {
-          if (Array.isArray(data)) {
-            return setApps({
-              app_list: data,
-              total_count: data.length,
+        if (activeKey === 'recommend' && Array.isArray(data)) {
+          setApps({
+            app_list: data,
+            total_count: data.length,
+          });
+          return;
+        }
+        
+        if (!Array.isArray(data) && 'app_list' in data) {
+          const code = data?.app_list?.[0]?.app_code;
+          const index = code ? apps.app_list.findIndex((item: any) => item.app_code === code) : -1;
+          if (index !== -1) {
+            const finallyIndex = Math.floor(index / 12) * 12;
+            setApps({
+              app_list: apps.app_list.toSpliced(finallyIndex, 12, ...data.app_list) || [],
+              total_count: data?.total_count || 0,
             });
-          }
-        } else {
-          if ('app_list' in data) {
-            const code = data?.app_list?.[0]?.app_code;
-            const index = code ? apps.app_list.findIndex((item: any) => item.app_code === code) : -1;
-            if (index !== -1) {
-              const finallyIndex = Math.floor(index / 12) * 12;
-              setApps(
-                {
-                  app_list: apps.app_list.toSpliced(finallyIndex, 12, ...data.app_list) || [],
-                  total_count: data?.total_count || 0,
-                } || {},
-              );
-            } else {
-              console.log('concat');
-              setApps(
-                {
-                  app_list: apps.app_list.concat(data?.app_list) || [],
-                  total_count: data?.total_count || 0,
-                } || {},
-              );
-            }
+          } else {
+            setApps({
+              app_list: apps.app_list.concat(data?.app_list) || [],
+              total_count: data?.total_count || 0,
+            });
           }
         }
       },
@@ -126,7 +120,7 @@ const Playground: NextPage = () => {
     },
   );
 
-  const onSearch = async (e: any) => {
+  const onSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setApps({
       app_list: [],
       total_count: 0,
@@ -155,13 +149,10 @@ const Playground: NextPage = () => {
     return !!apps.app_list[index]; // 检查给定的索引是否已经加载
   }
 
-  function loadMoreRows({ startIndex, stopIndex }: IndexRange) {
+  async function loadMoreRows({ startIndex, stopIndex }: IndexRange): Promise<void> {
     const pageSize = 12;
     const currentPage = Math.ceil(startIndex / pageSize) + 1; // 计算当前页数
-    console.log(startIndex, stopIndex, currentPage);
-    // 这里应该是一个从服务器获取更多数据的异步操作
-    // 例如，你可能会调用 API 并返回一个 Promise
-    return getAppListFn('', currentPage.toString());
+    await getAppListFn('', currentPage.toString());
   }
   const cellRenderer: GridCellRenderer = ({ columnIndex, key, rowIndex, style }) => {
     // 计算数组中的索引
@@ -177,7 +168,7 @@ const Playground: NextPage = () => {
           className='w-11/12'
           RightTop={
             item.is_collected === 'true' ? (
-              <StarFilled
+              <Star className="w-5 h-5 fill-current"
                 onClick={() => collect(item)}
                 style={{
                   height: '21px',
@@ -186,7 +177,7 @@ const Playground: NextPage = () => {
                 }}
               />
             ) : (
-              <StarOutlined
+              <Star className="w-5 h-5"
                 onClick={() => collect(item)}
                 style={{
                   height: '21px',
@@ -197,7 +188,6 @@ const Playground: NextPage = () => {
           }
           onClick={async () => {
             // 原生应用跳转
-
             if (item.team_mode === 'native_app') {
               const { chat_scene = '' } = item.team_context;
               const [, res] = await apiInterceptors(newDialogue({ chat_mode: chat_scene }));
@@ -235,29 +225,6 @@ const Playground: NextPage = () => {
               }
             }
           }}
-          LeftBottom={
-            <div className='flex gap-8 items-center text-[#878c93] text-sm dark:text-stone-200'>
-              {item.owner_name && (
-                <div className='flex gap-1 items-center'>
-                  <Avatar
-                    src={item?.owner_avatar_url}
-                    className='bg-gradient-to-tr from-[#31afff] to-[#1677ff] cursor-pointer'
-                  >
-                    {item.owner_name}
-                  </Avatar>
-                  <span>{item.owner_name}</span>
-                </div>
-              )}
-              {activeKey === 'recommend' ? (
-                <div className='flex items-start gap-1'>
-                  <IconFont type='icon-hot' className='text-lg' />
-                  <span className='text-[#878c93]'>{item.hot_value}</span>
-                </div>
-              ) : (
-                <div>{moment(item?.updated_at).fromNow() + ' ' + t('update')}</div>
-              )}
-            </div>
-          }
           scene={item?.team_context?.chat_scene || 'chat_agent'}
         />
       </div>
@@ -309,12 +276,19 @@ const Playground: NextPage = () => {
               <Segmented
                 className='h-10 backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border border-white rounded-lg shadow p-1 dark:border-[#6f7f95] dark:bg-[#6f7f95] dark:bg-opacity-60'
                 options={items}
-                onChange={key => setActiveKey(key as any)}
                 value={activeKey}
+                onChange={value => {
+                  setActiveKey(value as string);
+                  setApps({
+                    app_list: [],
+                    total_count: 0,
+                  });
+                  getAppListFn();
+                }}
               />
               <Input
                 variant='filled'
-                prefix={<SearchOutlined />}
+                prefix={<Search className="w-5 h-5" />}
                 placeholder={t('please_enter_the_keywords')}
                 onChange={onSearch}
                 onPressEnter={onSearch}
@@ -331,7 +305,7 @@ const Playground: NextPage = () => {
             <div className='flex items-center gap-4'>
               <Button
                 className='border-none text-white bg-button-gradient'
-                icon={<PlusOutlined />}
+                icon={<Plus className="w-5 h-5" />}
                 onClick={() => {
                   localStorage.removeItem('new_app_info');
                   router.push('/construct/app?openModal=true');

@@ -6,6 +6,7 @@ import { Button, Card, Spin, Tag, Tooltip, Upload, UploadProps, message } from '
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MyEmpty from '../common/MyEmpty';
+import { X, Loader2, Upload as LucideUpload } from 'lucide-react';
 
 function MyPlugins() {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ function MyPlugins() {
   const renderAction = useCallback(
     (item: IMyPlugin, index: number) => {
       if (index === actionIndex) {
-        return <LoadingOutlined />;
+        return <Loader2 className="w-5 h-5 animate-spin" />;
       }
       return (
         <Tooltip title='Uninstall'>
@@ -47,7 +48,7 @@ function MyPlugins() {
               uninstall(item.name, index);
             }}
           >
-            <ClearOutlined />
+            <X className="w-5 h-5" />
           </div>
         </Tooltip>
       );
@@ -97,7 +98,7 @@ function MyPlugins() {
           }}
           itemRender={() => <></>}
         >
-          <Button loading={uploading} type='primary' icon={<UploadOutlined />}>
+          <Button loading={uploading} type='primary' icon={<LucideUpload className="w-5 h-5" />}>
             {t('Upload')}
           </Button>
         </Upload>

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { useSearchParams } from 'next/navigation';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Loader2 } from 'lucide-react';
 
 import { UserChatContent } from '@/types/chat';
 import { parseResourceValue } from '@/utils';
@@ -141,7 +142,7 @@ const ChatInputPanel: React.FC<{ ctrl: AbortController }> = ({ ctrl }) => {
           }}
         >
           {replyLoading ? (
-            <Spin spinning={replyLoading} indicator={<LoadingOutlined className='text-white' />} />
+            <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
             t('sent')
           )}

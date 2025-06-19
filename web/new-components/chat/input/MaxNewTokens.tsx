@@ -3,6 +3,7 @@ import { ControlOutlined } from '@ant-design/icons';
 import { InputNumber, Popover, Slider, Tooltip } from 'antd';
 import React, { memo, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Sliders } from 'lucide-react';
 
 const MaxNewTokens: React.FC<{
   maxNewTokensValue: number;
@@ -68,7 +69,7 @@ const MaxNewTokens: React.FC<{
       >
         <Tooltip title={t('max_new_tokens')} placement='bottom' arrow={false}>
           <div className='flex w-8 h-8 items-center justify-center rounded-md hover:bg-[rgb(221,221,221,0.6)] cursor-pointer'>
-            <ControlOutlined />
+            <Sliders className="w-5 h-5" />
           </div>
         </Tooltip>
       </Popover>

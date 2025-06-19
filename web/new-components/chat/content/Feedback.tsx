@@ -7,6 +7,7 @@ import copy from 'copy-to-clipboard';
 import { useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Copy, ThumbsDown, ThumbsUp } from 'lucide-react';
 
 interface Tags {
   reason: string;
@@ -167,7 +168,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
       {contextHolder}
       <div className='flex flex-1 items-center text-sm px-4'>
         <div className='flex gap-3'>
-          <LikeOutlined
+          <ThumbsUp
             className={classNames('cursor-pointer', { 'text-[#0C75FC]': status === 'like' })}
             onClick={async () => {
               if (status === 'like') {
@@ -192,7 +193,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
             trigger='click'
             open={feedbackOpen}
           >
-            <DislikeOutlined
+            <ThumbsDown
               className={classNames('cursor-pointer', {
                 'text-[#0C75FC]': status === 'unlike',
               })}
@@ -207,7 +208,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
           </Popover>
         </div>
         <Divider type='vertical' />
-        <CopyOutlined className='cursor-pointer' onClick={() => onCopyContext(content.context)} />
+        <Copy className="w-5 h-5 cursor-pointer" onClick={() => onCopyContext(content.context)} />
       </div>
     </>
   );

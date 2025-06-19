@@ -6,6 +6,7 @@ import { Badge, Button, Collapse, CollapseProps, Input, Popover } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import StaticNodes from './static-nodes';
+import { Plus } from 'lucide-react';
 
 const { Search } = Input;
 
@@ -147,7 +148,7 @@ const AddNodes: React.FC = () => {
         type='primary'
         className='flex items-center justify-center rounded-full left-4 top-4'
         style={{ zIndex: 1050 }}
-        icon={<PlusOutlined />}
+        icon={<Plus className="w-5 h-5" />}
       />
     </Popover>
   );

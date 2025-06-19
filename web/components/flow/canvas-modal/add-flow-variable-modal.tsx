@@ -7,6 +7,7 @@ import { DefaultOptionType } from 'antd/es/cascader';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Minus, Plus } from 'lucide-react';
 
 const { Option } = Select;
 const VALUE_TYPES = ['str', 'int', 'float', 'bool', 'ref'] as const;
@@ -166,7 +167,7 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
         type='primary'
         className='flex items-center justify-center rounded-full left-4 top-4'
         style={{ zIndex: 1050 }}
-        icon={<PlusOutlined />}
+        icon={<Plus className="w-5 h-5" />}
         onClick={() => setIsModalOpen(true)}
       />
 
@@ -264,7 +265,7 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
                       <Input placeholder='Parameter Description' />
                     </Form.Item>
 
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                    <Minus className="w-5 h-5" onClick={() => remove(name)} />
 
                     <Form.Item name={[name, 'key']} hidden initialValue='dbgpt.core.flow.params' />
                     <Form.Item name={[name, 'scope']} hidden initialValue='flow_priv' />
@@ -273,7 +274,7 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
                 ))}
 
                 <Form.Item>
-                  <Button type='dashed' onClick={() => add()} block icon={<PlusOutlined />}>
+                  <Button type='dashed' onClick={() => add()} block icon={<Plus className="w-5 h-5" />}>
                     {t('Add_Parameter')}
                   </Button>
                 </Form.Item>

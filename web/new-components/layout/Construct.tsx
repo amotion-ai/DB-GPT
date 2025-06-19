@@ -1,17 +1,11 @@
 import { ModelSvg } from '@/components/icons';
-import Icon, {
-  AppstoreOutlined,
-  BuildOutlined,
-  ConsoleSqlOutlined,
-  ForkOutlined,
-  MessageOutlined,
-  PartitionOutlined,
-} from '@ant-design/icons';
+import { AppstoreFilled, BulbOutlined, DingdingOutlined, PlusOutlined, SearchOutlined, WarningOutlined } from '@ant-design/icons';
 import { ConfigProvider, Tabs } from 'antd';
 import { t } from 'i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import './style.css';
+import { AppWindow, Lightbulb, MessageSquare, Plus, Search, AlertTriangle } from 'lucide-react';
 
 function ConstructLayout({ children }: { children: React.ReactNode }) {
   const items = [
@@ -19,7 +13,7 @@ function ConstructLayout({ children }: { children: React.ReactNode }) {
       key: 'app',
       name: t('App'),
       path: '/app',
-      icon: <AppstoreOutlined />,
+      icon: <AppWindow className="w-5 h-5" />,
       // operations: (
       //   <Button
       //     className='border-none text-white bg-button-gradient h-full flex items-center'
@@ -30,28 +24,28 @@ function ConstructLayout({ children }: { children: React.ReactNode }) {
       //   </Button>
       // ),
     },
-    {
-      key: 'flow',
-      name: t('awel_flow'),
-      icon: <ForkOutlined />,
-      path: '/flow',
-    },
+    // {
+    //   key: 'flow',
+    //   name: t('awel_flow'),
+    //   icon: <Plus className="w-5 h-5" />,
+    //   path: '/flow',
+    // },
     {
       key: 'models',
       name: t('model_manage'),
       path: '/models',
-      icon: <Icon component={ModelSvg} />,
+      icon: <ModelSvg />,
     },
     {
       key: 'database',
       name: t('Database'),
-      icon: <ConsoleSqlOutlined />,
+      icon: <Lightbulb className="w-5 h-5" />,
       path: '/database',
     },
     {
       key: 'knowledge',
       name: t('Knowledge_Space'),
-      icon: <PartitionOutlined />,
+      icon: <MessageSquare className="w-5 h-5" />,
       path: '/knowledge',
     },
     // {
@@ -63,15 +57,15 @@ function ConstructLayout({ children }: { children: React.ReactNode }) {
     {
       key: 'prompt',
       name: t('Prompt'),
-      icon: <MessageOutlined />,
+      icon: <DingdingOutlined className="w-5 h-5" />,
       path: '/prompt',
     },
-    {
-      key: 'dbgpts',
-      name: t('dbgpts_community'),
-      path: '/dbgpts',
-      icon: <BuildOutlined />,
-    },
+    // {
+    //   key: 'dbgpts',
+    //   name: t('dbgpts_community'),
+    //   path: '/dbgpts',
+    //   icon: <Plus className="w-5 h-5" />,
+    // },
   ];
   const router = useRouter();
   const activeKey = router.pathname.split('/')[2];

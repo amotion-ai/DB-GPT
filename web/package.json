@@ -58,6 +58,7 @@
     "iron-session": "^6.3.1",
     "katex": "^0.16.21",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.516.0",
     "markdown-it": "^14.1.0",
     "moment": "^2.29.4",
     "monaco-editor": ">=0.31.0",

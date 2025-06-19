@@ -3,6 +3,7 @@ import { SwapRightOutlined } from '@ant-design/icons';
 import { GPTVis } from '@antv/gpt-vis';
 import ReferencesContent from './ReferencesContent';
 import markdownComponents, { markdownPlugins, preprocessLaTeX } from './config';
+import { ArrowRight } from 'lucide-react';
 
 interface Props {
   data: {
@@ -24,7 +25,7 @@ function AgentMessages({ data }: Props) {
             {item.model ? <ModelIcon model={item.model} /> : <div className='rounded-full w-6 h-6 bg-gray-100' />}
             <div className='ml-2 opacity-70'>
               {item.sender}
-              <SwapRightOutlined className='mx-2 text-base' />
+              <ArrowRight className="w-5 h-5 mx-2" />
               {item.receiver}
             </div>
           </div>

@@ -19,6 +19,7 @@ import {
   renderUpload,
   renderVariables,
 } from './node-renderer';
+import { Info } from 'lucide-react';
 
 interface NodeParamHandlerProps {
   formValuesChange: any;
@@ -44,7 +45,7 @@ const NodeParamHandler: React.FC<NodeParamHandlerProps> = ({ formValuesChange, n
             initialValue={defaultValue}
             rules={[{ required: !data.optional }]}
             label={<span className='text-neutral-500'>{data.label}</span>}
-            tooltip={data.description ? { title: data.description, icon: <InfoCircleOutlined /> } : ''}
+            tooltip={data.description ? { title: data.description, icon: <Info className="w-5 h-5" /> } : ''}
           >
             <InputNumber className='w-full nodrag' />
           </Form.Item>
@@ -58,7 +59,7 @@ const NodeParamHandler: React.FC<NodeParamHandlerProps> = ({ formValuesChange, n
             initialValue={defaultValue}
             rules={[{ required: !data.optional }]}
             label={<span className='text-neutral-500'>{data.label}</span>}
-            tooltip={data.description ? { title: data.description, icon: <InfoCircleOutlined /> } : ''}
+            tooltip={data.description ? { title: data.description, icon: <Info className="w-5 h-5" /> } : ''}
           >
             {data.options?.length > 0 ? (
               <Select
@@ -81,7 +82,7 @@ const NodeParamHandler: React.FC<NodeParamHandlerProps> = ({ formValuesChange, n
             initialValue={defaultValue}
             rules={[{ required: !data.optional }]}
             label={<span className='text-neutral-500'>{data.label}</span>}
-            tooltip={data.description ? { title: data.description, icon: <InfoCircleOutlined /> } : ''}
+            tooltip={data.description ? { title: data.description, icon: <Info className="w-5 h-5" /> } : ''}
           >
             <Checkbox className='ml-2 nodrag' />
           </Form.Item>
@@ -140,7 +141,7 @@ const NodeParamHandler: React.FC<NodeParamHandlerProps> = ({ formValuesChange, n
         rules={[{ required: !data.optional }]}
         label={<span className='text-neutral-500'>{data.label}</span>}
         {...(refresh_depends && { dependencies: refresh_depends })}
-        {...(data.description && { tooltip: { title: data.description, icon: <InfoCircleOutlined /> } })}
+        {...(data.description && { tooltip: { title: data.description, icon: <Info className="w-5 h-5" /> } })}
       >
         {renderComponentByType(ui_type, data, formValuesChange)}
       </Form.Item>

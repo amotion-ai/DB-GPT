@@ -5,6 +5,7 @@ import { Button, Form, GetProp, Modal, Radio, Upload, UploadFile, UploadProps, m
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Edge, Node } from 'reactflow';
+import { Upload as LucideUpload } from 'lucide-react';
 
 type Props = {
   isImportModalOpen: boolean;
@@ -94,7 +95,7 @@ export const ImportFlowModal: React.FC<Props> = ({ isImportModalOpen, setIsImpor
             rules={[{ required: true, message: 'Please upload a file' }]}
           >
             <Upload {...props} accept='.json,.zip' maxCount={1}>
-              <Button icon={<UploadOutlined />}> {t('Upload')}</Button>
+              <Button icon={<LucideUpload className="w-5 h-5" />}> {t('Upload')}</Button>
             </Upload>
           </Form.Item>
 

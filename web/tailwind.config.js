@@ -15,22 +15,25 @@ module.exports = {
       },
       colors: {
         theme: {
-          primary: '#0069fe',
-          light: '#f7f7f7',
-          dark: '#151622',
-          'dark-container': '#232734',
-          success: '#52C41A',
-          error: '#FF4D4F',
-          warning: '#FAAD14',
+          primary: '#000000',
+          secondary: '#6B7280',
+          light: '#FFFFFF',
+          dark: '#111827',
+          'dark-container': '#1F2937',
+          success: '#10B981',
+          error: '#EF4444',
+          warning: '#F59E0B',
         },
-        gradientL: '#00DAEF',
-        gradientR: '#105EFF',
+        gradientL: '#000000',
+        gradientR: '#374151',
       },
       backgroundColor: {
-        bar: '#e0e7f2',
+        bar: '#F9FAFB',
+        'bar-dark': '#111827',
       },
       textColor: {
-        default: '#0C75FC',
+        default: '#000000',
+        'default-dark': '#FFFFFF',
       },
       backgroundImage: {
         'gradient-light': "url('/images/bg.png')",
@@ -39,17 +42,17 @@ module.exports = {
       },
       keyframes: {
         pulse1: {
-          '0%, 100%': { transform: 'scale(1)', backgroundColor: '#bdc0c4' },
-          '33.333%': { transform: 'scale(1.5)', backgroundColor: '#525964' },
+          '0%, 100%': { transform: 'scale(1)', backgroundColor: '#9CA3AF' },
+          '33.333%': { transform: 'scale(1.5)', backgroundColor: '#374151' },
         },
         pulse2: {
-          '0%, 100%': { transform: 'scale(1)', backgroundColor: '#bdc0c4' },
-          '33.333%': { transform: 'scale(1.0)', backgroundColor: '#bdc0c4' },
-          '66.666%': { transform: 'scale(1.5)', backgroundColor: '#525964' },
+          '0%, 100%': { transform: 'scale(1)', backgroundColor: '#9CA3AF' },
+          '33.333%': { transform: 'scale(1.0)', backgroundColor: '#9CA3AF' },
+          '66.666%': { transform: 'scale(1.5)', backgroundColor: '#374151' },
         },
         pulse3: {
-          '0%, 66.666%': { transform: 'scale(1)', backgroundColor: '##bdc0c4' },
-          '100%': { transform: 'scale(1.5)', backgroundColor: '#525964' },
+          '0%, 66.666%': { transform: 'scale(1)', backgroundColor: '#9CA3AF' },
+          '100%': { transform: 'scale(1.5)', backgroundColor: '#374151' },
         },
       },
       animation: {

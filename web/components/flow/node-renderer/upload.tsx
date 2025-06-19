@@ -7,6 +7,7 @@ import type { UploadFile, UploadProps } from 'antd';
 import { Button, Upload, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Upload as UploadIcon } from 'lucide-react';
 
 type Props = {
   formValuesChange: any;
@@ -111,7 +112,7 @@ export const renderUpload = (params: Props) => {
         multiple={data.is_list ? true : false}
         accept={uploadType}
       >
-        <Button loading={uploading} icon={<UploadOutlined />}>
+        <Button loading={uploading} icon={<UploadIcon className="w-5 h-5" />}>
           {t('Upload_Data')}
         </Button>
       </Upload>

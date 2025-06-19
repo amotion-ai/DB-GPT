@@ -11,6 +11,7 @@ import { TFunction } from 'i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus } from 'lucide-react';
 
 import styles from './styles.module.css';
 
@@ -177,7 +178,7 @@ const Prompt = () => {
             <Button
               className='border-none text-white bg-button-gradient h-full'
               onClick={handleAddBtn}
-              icon={<PlusOutlined />}
+              icon={<Plus className="w-5 h-5" />}
             >
               {t('Add')} Prompts
             </Button>

@@ -3,6 +3,7 @@ import { DeleteFilled } from '@ant-design/icons';
 import { Card, Input, Select, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Trash2 } from 'lucide-react';
 
 interface IProps {
   resourceTypeOptions: any[];
@@ -71,8 +72,8 @@ export default function ResourceCard(props: IProps) {
       className='mb-3 dark:bg-[#232734] border-gray-200'
       title={`${t('resource')} ${index + 1}`}
       extra={
-        <DeleteFilled
-          className='text-[#ff1b2e] !text-lg'
+        <Trash2
+          className='w-5 h-5 text-[#ff1b2e]'
           onClick={() => {
             handleDeleteResource();
           }}

@@ -4,6 +4,7 @@ import type { TabsProps } from 'antd';
 import { Divider, Drawer, Tabs, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useMemo, useState } from 'react';
+import { Link } from 'lucide-react';
 
 const ReferencesContentView: React.FC<{ references: any }> = ({ references }) => {
   const router = useRouter();
@@ -42,7 +43,7 @@ const ReferencesContentView: React.FC<{ references: any }> = ({ references }) =>
     <div>
       <Divider className='mb-1 mt-0' dashed />
       <div className='flex text-sm gap-2 text-blue-400' onClick={() => setOpen(true)}>
-        <LinkOutlined />
+        <Link className="w-5 h-5" />
         <span className='text-sm'>查看回复引用</span>
       </div>
       <Drawer

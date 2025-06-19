@@ -5,6 +5,7 @@ import useSummary from '@/hooks/use-summary';
 import { PaperClipOutlined } from '@ant-design/icons';
 import { Button, Upload } from 'antd';
 import { useContext, useState } from 'react';
+import { Paperclip } from 'lucide-react';
 
 interface IProps {
   className?: string;
@@ -47,7 +48,7 @@ export default function DocUpload(props: IProps) {
       className='absolute z-10 top-2 left-2'
       accept='.pdf,.ppt,.pptx,.xls,.xlsx,.doc,.docx,.txt,.md'
     >
-      <Button loading={loading} size='small' shape='circle' icon={<PaperClipOutlined />}></Button>
+      <Button loading={loading} size='small' shape='circle' icon={<Paperclip className="w-5 h-5" />}></Button>
     </Upload>
   );
 }

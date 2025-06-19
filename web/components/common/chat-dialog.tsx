@@ -10,6 +10,7 @@ import ChatContent from '../chat/chat-content';
 import { renderModelIcon } from '../chat/header/model-selector';
 import MyEmpty from './MyEmpty';
 import CompletionInput from './completion-input';
+import { ChevronLeft } from 'lucide-react';
 
 interface Props {
   title?: string;
@@ -109,7 +110,7 @@ function ChatDialog({ title, chatMode, completionApi, chatParams, model = '' }: 
           setOpen(!open);
         }}
       >
-        <CaretLeftOutlined />
+        <ChevronLeft className="w-5 h-5" />
       </div>
     </div>
   );

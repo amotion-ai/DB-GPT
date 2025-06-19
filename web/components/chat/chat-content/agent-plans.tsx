@@ -1,6 +1,7 @@
 import { CaretRightOutlined, CheckOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { GPTVis } from '@antv/gpt-vis';
 import { Collapse } from 'antd';
+import { ChevronRight, Check, Clock } from 'lucide-react';
 
 import markdownComponents, { markdownPlugins, preprocessLaTeX } from './config';
 
@@ -21,7 +22,7 @@ function AgentPlans({ data }: Props) {
     <Collapse
       bordered
       className='my-3'
-      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+      expandIcon={({ isActive }) => <ChevronRight className="w-5 h-5" />}
       items={data.map((item, index) => {
         return {
           key: index,
@@ -31,9 +32,9 @@ function AgentPlans({ data }: Props) {
                 {item.name} - {item.agent}
               </span>
               {item.status === 'complete' ? (
-                <CheckOutlined className='!text-green-500 ml-2' />
+                <Check className="w-5 h-5" />
               ) : (
-                <ClockCircleOutlined className='!text-gray-500 ml-2' />
+                <Clock className="w-5 h-5" />
               )}
             </div>
           ),

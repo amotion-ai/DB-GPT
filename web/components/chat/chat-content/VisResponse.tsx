@@ -7,6 +7,7 @@ import { githubLightTheme } from '@uiw/react-json-view/githubLight';
 import { Alert, Spin } from 'antd';
 import classNames from 'classnames';
 import React, { useContext, useMemo } from 'react';
+import { Loader2 } from 'lucide-react';
 
 import markdownComponents, { markdownPlugins } from './config';
 
@@ -46,7 +47,7 @@ const VisResponse: React.FC<{ data: VisResponseProps }> = ({ data }) => {
         type={type}
         {...(type && { showIcon: true })}
         {...(type === 'warning' && {
-          icon: <Spin indicator={<LoadingOutlined spin />} />,
+          icon: <Loader2 className="w-5 h-5 animate-spin" />,
         })}
       />
       {data.result && (

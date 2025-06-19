@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { X, Loader2, PauseCircle, RefreshCw } from 'lucide-react';
 
 import { parseResourceValue, transformFileUrl } from '@/utils';
 
@@ -59,7 +60,7 @@ const ToolsBar: React.FC<{
     return [
       {
         tip: t('stop_replying'),
-        icon: <PauseCircleOutlined className={classNames({ 'text-[#0c75fc]': canAbort })} />,
+        icon: <PauseCircle className="w-5 h-5" />,
         can_use: canAbort,
         key: 'abort',
         onClick: () => {
@@ -75,7 +76,7 @@ const ToolsBar: React.FC<{
       },
       {
         tip: t('answer_again'),
-        icon: <RedoOutlined />,
+        icon: <RefreshCw className="w-5 h-5" />,
         can_use: !replyLoading && history.length > 0,
         key: 'redo',
         onClick: async () => {
@@ -102,9 +103,9 @@ const ToolsBar: React.FC<{
       {
         tip: t('erase_memory'),
         icon: clsLoading ? (
-          <Spin spinning={clsLoading} indicator={<LoadingOutlined style={{ fontSize: 20 }} />} />
+          <Loader2 className="w-5 h-5 animate-spin" />
         ) : (
-          <ClearOutlined />
+          <X className="w-5 h-5" />
         ),
         can_use: history.length > 0,
         key: 'clear',
@@ -240,7 +241,7 @@ const ToolsBar: React.FC<{
         <div className='flex gap-1'>{returnTools(rightToolsConfig)}</div>
       </div>
       <ResourceItemsDisplay />
-      <Spin spinning={loading} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+      <Spin spinning={loading} indicator={<Loader2 className="w-5 h-5 animate-spin" />} />
     </div>
   );
 };

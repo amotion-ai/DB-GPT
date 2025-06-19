@@ -6,6 +6,7 @@ import { message } from 'antd';
 import moment from 'moment';
 import { useTranslation } from 'react-i18next';
 import GptCard from '../common/gpt-card';
+import { PauseCircle } from 'lucide-react';
 
 import { useState } from 'react';
 
@@ -55,7 +56,7 @@ function ModelCard({ info }: Props) {
         {
           children: (
             <div>
-              <PauseCircleOutlined className='mr-2' />
+              <PauseCircle className="w-5 h-5 mr-2" />
               <span className='text-sm'>Stop Model</span>
             </div>
           ),

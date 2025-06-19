@@ -14,6 +14,7 @@ import moment from 'moment';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MyEmpty from '../common/MyEmpty';
+import { X, Download, Search, RefreshCw } from 'lucide-react';
 
 function MarketPlugins() {
   const { t } = useTranslation();
@@ -114,10 +115,10 @@ function MarketPlugins() {
           <Input allowClear className='w-48' />
         </Form.Item>
         <Form.Item>
-          <Button className='mr-2' type='primary' htmlType='submit' icon={<SearchOutlined />}>
+          <Button className='mr-2' type='primary' htmlType='submit' icon={<Search className="w-5 h-5" />}>
             {t('Search')}
           </Button>
-          <Button loading={uploading} type='primary' icon={<SyncOutlined />} onClick={updateFromGithub}>
+          <Button loading={uploading} type='primary' icon={<RefreshCw className="w-5 h-5" />} onClick={updateFromGithub}>
             {t('Update_From_Github')}
           </Button>
         </Form.Item>
@@ -178,7 +179,7 @@ function MarketPlugins() {
             RightBottom={
               agent.installed ? (
                 <ChatButton
-                  Icon={<ClearOutlined />}
+                  Icon={<X className="w-5 h-5" />}
                   text='Uninstall'
                   onClick={() => {
                     pluginAction(agent.name, index, false);
@@ -186,7 +187,7 @@ function MarketPlugins() {
                 />
               ) : (
                 <ChatButton
-                  Icon={<DownloadOutlined />}
+                  Icon={<Download className="w-5 h-5" />}
                   text='Install'
                   onClick={() => {
                     pluginAction(agent.name, index, true);

@@ -24,6 +24,7 @@ import VisConvertError from './vis-convert-error';
 import VisDashboard from './vis-dashboard';
 import VisPlugin from './vis-plugin';
 import { VisThinking } from './vis-thinking';
+import { Link, BookOpen, RefreshCw } from 'lucide-react';
 
 type MarkdownComponent = Parameters<typeof GPTVis>['0']['components'];
 
@@ -296,7 +297,7 @@ const basicComponents: MarkdownComponent = {
   a({ children, href }) {
     return (
       <div className='inline-block text-blue-600 dark:text-blue-400'>
-        <LinkOutlined className='mr-1' />
+        <Link className="w-5 h-5" />
         <a href={href} target='_blank' rel='noreferrer'>
           {children}
         </a>
@@ -311,7 +312,7 @@ const basicComponents: MarkdownComponent = {
           src={src}
           alt={alt}
           placeholder={
-            <Tag icon={<SyncOutlined spin />} color='processing'>
+            <Tag icon={<RefreshCw className="w-5 h-5 animate-spin" />} color='processing'>
               Image Loading...
             </Tag>
           }
@@ -434,7 +435,7 @@ const extraComponents: MarkdownComponent = {
     return (
       <div>
         <p className='mb-2'>
-          <ReadOutlined className='mr-2' />
+          <BookOpen className="w-5 h-5" />
           <span className='font-semibold'>Document Summary</span>
         </p>
         <div>{children}</div>

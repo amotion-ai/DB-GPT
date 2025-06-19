@@ -12,6 +12,7 @@ import { defaultAdvicesFilter } from './advisor/utils';
 import { customCharts } from './charts';
 import { processNilData, sortData } from './charts/util';
 import { AutoChartProps, ChartType, CustomAdvisorConfig, CustomChart, Specification } from './types';
+import { Download } from 'lucide-react';
 const { Option } = Select;
 
 export const AutoChart = (props: AutoChartProps) => {
@@ -155,7 +156,7 @@ export const AutoChart = (props: AutoChartProps) => {
             <Tooltip title={i18n.t('Download')}>
               <Button
                 onClick={() => downloadImage(chartRef.current, i18n.t(renderChartType as I18nKeys))}
-                icon={<DownloadOutlined />}
+                icon={<Download className="w-5 h-5" />}
                 type='text'
               />
             </Tooltip>

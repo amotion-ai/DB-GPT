@@ -9,6 +9,7 @@ import { Button, Modal, Tag, message } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus } from 'lucide-react';
 
 function Models() {
   const { t } = useTranslation();
@@ -119,7 +120,7 @@ function Models() {
           <div className='flex items-center gap-4'>
             <Button
               className='border-none text-white bg-button-gradient'
-              icon={<PlusOutlined />}
+              icon={<Plus className="w-5 h-5" />}
               onClick={() => {
                 setIsModalOpen(true);
               }}

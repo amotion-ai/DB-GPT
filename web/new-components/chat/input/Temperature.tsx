@@ -3,6 +3,7 @@ import { ControlOutlined } from '@ant-design/icons';
 import { InputNumber, Popover, Slider, Tooltip } from 'antd';
 import React, { memo, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Sliders } from 'lucide-react';
 
 const Temperature: React.FC<{ temperatureValue: any; setTemperatureValue: any }> = ({
   temperatureValue,
@@ -65,7 +66,7 @@ const Temperature: React.FC<{ temperatureValue: any; setTemperatureValue: any }>
       >
         <Tooltip title={t('temperature')} placement='bottom' arrow={false}>
           <div className='flex w-8 h-8 items-center justify-center rounded-md hover:bg-[rgb(221,221,221,0.6)] cursor-pointer'>
-            <ControlOutlined />
+            <Sliders className="w-5 h-5" />
           </div>
         </Tooltip>
       </Popover>

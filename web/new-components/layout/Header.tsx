@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BookOpen } from 'lucide-react';
 
 const Header: React.FC = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ const Header: React.FC = () => {
     <header className='flex items-center justify-end fixed top-0 right-0 h-14 pr-11 bg-transparent'>
       <a href='htt://docs.dbgpt.cn' target='_blank' className='flex items-center h-full mr-4' rel='noreferrer'>
         <Tooltip title={t('docs')}>
-          <ReadOutlined />
+          <BookOpen className="w-5 h-5" />
         </Tooltip>
       </a>
 

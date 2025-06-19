@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import qs from 'querystring';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Plus } from 'lucide-react';
 
 function Flow() {
   const router = useRouter();
@@ -167,7 +168,7 @@ function Flow() {
             <div className='flex items-center gap-4'>
               <Button
                 className='border-none text-white bg-button-gradient'
-                icon={<PlusOutlined />}
+                icon={<Plus className="w-5 h-5" />}
                 onClick={() => {
                   router.push('/construct/flow/canvas');
                 }}

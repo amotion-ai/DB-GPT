@@ -6,6 +6,7 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import { default as classNames, default as cls } from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Inbox, Minus, Plus } from 'lucide-react';
 
 type FileParams = {
   file: RcFile;
@@ -145,7 +146,7 @@ export default function DocUploadForm(props: IProps) {
                       <Input placeholder={t('input_question')} />
                     </Form.Item>
                     <Form.Item>
-                      <MinusCircleOutlined
+                      <Minus className="w-5 h-5"
                         onClick={() => {
                           remove(name);
                         }}
@@ -160,7 +161,7 @@ export default function DocUploadForm(props: IProps) {
                       add();
                     }}
                     block
-                    icon={<PlusOutlined />}
+                    icon={<Plus className="w-5 h-5" />}
                   >
                     {t('Add_problem')}
                   </Button>
@@ -200,7 +201,7 @@ export default function DocUploadForm(props: IProps) {
                       <Input placeholder={t('input_question')} />
                     </Form.Item>
                     <Form.Item>
-                      <MinusCircleOutlined
+                      <Minus className="w-5 h-5"
                         onClick={() => {
                           remove(name);
                         }}
@@ -215,7 +216,7 @@ export default function DocUploadForm(props: IProps) {
                       add();
                     }}
                     block
-                    icon={<PlusOutlined />}
+                    icon={<Plus className="w-5 h-5" />}
                   >
                     {t('Add_problem')}
                   </Button>
@@ -269,7 +270,7 @@ export default function DocUploadForm(props: IProps) {
                       <Input placeholder={t('input_question')} />
                     </Form.Item>
                     <Form.Item>
-                      <MinusCircleOutlined
+                      <Minus className="w-5 h-5"
                         onClick={() => {
                           remove(name);
                         }}
@@ -284,7 +285,7 @@ export default function DocUploadForm(props: IProps) {
                       add();
                     }}
                     block
-                    icon={<PlusOutlined />}
+                    icon={<Plus className="w-5 h-5" />}
                   >
                     {t('Add_problem')}
                   </Button>
@@ -331,7 +332,7 @@ export default function DocUploadForm(props: IProps) {
             customRequest={uploadFile}
           >
             <p className='ant-upload-drag-icon'>
-              <InboxOutlined />
+              <Inbox className="w-5 h-5" />
             </p>
             <p style={{ color: 'rgb(22, 108, 255)', fontSize: '20px' }}>{t('Select_or_Drop_file')}</p>
             <p className='ant-upload-hint' style={{ color: 'rgb(22, 108, 255)' }}>
@@ -349,7 +350,7 @@ export default function DocUploadForm(props: IProps) {
                       <Input placeholder='请输入问题' />
                     </Form.Item>
                     <Form.Item>
-                      <MinusCircleOutlined
+                      <Minus className="w-5 h-5"
                         onClick={() => {
                           remove(name);
                         }}
@@ -364,7 +365,7 @@ export default function DocUploadForm(props: IProps) {
                       add();
                     }}
                     block
-                    icon={<PlusOutlined />}
+                    icon={<Plus className="w-5 h-5" />}
                   >
                     {t('Add_problem')}
                   </Button>

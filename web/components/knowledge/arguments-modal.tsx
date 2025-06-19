@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { apiInterceptors, getArguments, saveArguments } from '@/client/api';
 import { IArguments, ISpace } from '@/types/knowledge';
-import { AlertFilled, BookOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { AlertTriangle, BookOpen, Search } from 'lucide-react';
 
 const { TextArea } = Input;
 
@@ -141,7 +141,7 @@ export default function ArgumentsModal({ space, argumentsShow, setArgumentsShow 
       key: 'Embedding',
       label: (
         <div>
-          <FileSearchOutlined />
+          <Search className="w-5 h-5" />
           {t('Embedding')}
         </div>
       ),
@@ -151,7 +151,7 @@ export default function ArgumentsModal({ space, argumentsShow, setArgumentsShow 
       key: 'Prompt',
       label: (
         <div>
-          <AlertFilled />
+          <AlertTriangle className="w-5 h-5" />
           {t('Prompt')}
         </div>
       ),
@@ -161,7 +161,7 @@ export default function ArgumentsModal({ space, argumentsShow, setArgumentsShow 
       key: 'Summary',
       label: (
         <div>
-          <BookOutlined />
+          <BookOpen className="w-5 h-5" />
           {t('Summary')}
         </div>
       ),

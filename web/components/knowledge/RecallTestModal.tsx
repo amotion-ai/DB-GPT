@@ -5,6 +5,7 @@ import { SettingOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { Button, Card, Empty, Form, Input, InputNumber, Modal, Popover, Select, Spin, Tag } from 'antd';
 import React, { useEffect } from 'react';
+import { Settings } from 'lucide-react';
 
 type RecallTestModalProps = {
   open: boolean;
@@ -118,7 +119,7 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
               </Form>
             }
           >
-            <SettingOutlined className='text-lg' />
+            <Settings className="w-5 h-5" />
           </Popover>
         }
       >

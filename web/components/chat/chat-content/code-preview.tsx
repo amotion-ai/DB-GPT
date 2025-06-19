@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard';
 import { CSSProperties, useContext } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { coldarkDark, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Copy } from 'lucide-react';
 
 interface Props {
   code: string;
@@ -22,7 +23,7 @@ export function CodePreview({ code, light, dark, language, customStyle }: Props)
       <Button
         className='absolute right-3 top-2 text-gray-300 hover:!text-gray-200 bg-gray-700'
         type='text'
-        icon={<CopyOutlined />}
+        icon={<Copy className="w-5 h-5" />}
         onClick={() => {
           const success = copy(code);
           message[success ? 'success' : 'error'](success ? '复制成功' : '复制失败');

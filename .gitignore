@@ -189,3 +189,7 @@ thirdparty
 configs/my
 .devcontainer/dev.toml
 test_docs
+
+# Environment variables
+.env
+.env.*

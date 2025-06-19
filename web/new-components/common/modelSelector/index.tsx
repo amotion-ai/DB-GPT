@@ -7,6 +7,7 @@ import { Select } from 'antd';
 import Image from 'next/image';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronDown } from 'lucide-react';
 
 import styles from './styles.module.css';
 
@@ -51,7 +52,7 @@ const ModelSelector: React.FC = () => {
         value={model}
         placeholder={t('choose_model')}
         className='w-48 h-8 rounded-3xl'
-        suffixIcon={<CaretDownOutlined className='text-sm text-[#000000]' />}
+        suffixIcon={<ChevronDown className="w-5 h-5" />}
         onChange={val => {
           setModel(val);
         }}

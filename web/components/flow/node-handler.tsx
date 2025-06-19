@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Connection, Handle, Position, useReactFlow } from 'reactflow';
 import RequiredIcon from './required-icon';
 import StaticNodes from './static-nodes';
+import { Info, Minus, Plus } from 'lucide-react';
 
 interface NodeHandlerProps {
   node: IFlowNode;
@@ -249,33 +250,27 @@ const NodeHandler: React.FC<NodeHandlerProps> = ({ node, data, type, label, inde
           }
         >
           {['inputs', 'parameters'].includes(label) && (
-            <PlusOutlined
-              className='cursor-pointer mr-1'
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                showRelatedNodes(e);
-              }}
-            />
+            <Plus className="w-5 h-5 cursor-pointer mr-1" onClick={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              showRelatedNodes(e);
+            }} />
           )}
         </Popconfirm>
 
         {['inputs', 'parameters'].includes(label) && dynamic && index >= dynamicMinimum && (
-          <MinusCircleOutlined
-            className='cursor-pointer text-red-500 mr-1'
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-              removeDynamicField(e);
-            }}
-          />
+          <Minus className="w-5 h-5 cursor-pointer text-red-500 mr-1" onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            removeDynamicField(e);
+          }} />
         )}
 
         {label !== 'outputs' && <RequiredIcon optional={isOptional()} />}
         {data.type_name}
         {data.description && (
           <Tooltip title={data.description}>
-            <InfoCircleOutlined className='ml-2 cursor-pointer' />
+            <Info className="w-5 h-5 cursor-pointer ml-2" />
           </Tooltip>
         )}
 
@@ -292,26 +287,20 @@ const NodeHandler: React.FC<NodeHandlerProps> = ({ node, data, type, label, inde
           }
         >
           {['outputs'].includes(label) && (
-            <PlusOutlined
-              className='ml-2 cursor-pointer'
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                showRelatedNodes(e);
-              }}
-            />
+            <Plus className="w-5 h-5 cursor-pointer ml-2" onClick={e => {
+              e.stopPropagation();
+              e.preventDefault();
+              showRelatedNodes(e);
+            }} />
           )}
         </Popconfirm>
 
         {['outputs'].includes(label) && dynamic && index >= dynamicMinimum && (
-          <MinusCircleOutlined
-            className='ml-2 cursor-pointer text-red-500'
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-              removeDynamicField(e);
-            }}
-          />
+          <Minus className="w-5 h-5 cursor-pointer text-red-500 ml-2" onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            removeDynamicField(e);
+          }} />
         )}
 
         {/* Add dynamic field button */}

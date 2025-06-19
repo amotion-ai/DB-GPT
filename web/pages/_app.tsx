@@ -1,11 +1,10 @@
 import { ChatContext, ChatContextProvider } from '@/app/chat-context';
-import SideBar from '@/components/layout/side-bar';
+import NavBar from '@/components/layout/nav-bar';
 import FloatHelper from '@/new-components/layout/FloatHelper';
 import { STORAGE_LANG_KEY, STORAGE_USERINFO_KEY, STORAGE_USERINFO_VALID_TIME_KEY } from '@/utils/constants/index';
 import { App, ConfigProvider, MappingAlgorithm, theme } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
-import classNames from 'classnames';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -19,9 +18,12 @@ import '../styles/globals.css';
 const antdDarkTheme: MappingAlgorithm = (seedToken, mapToken) => {
   return {
     ...theme.darkAlgorithm(seedToken, mapToken),
-    colorBgBase: '#232734',
-    colorBorder: '#828282',
-    colorBgContainer: '#232734',
+    colorBgBase: '#111827',
+    colorBorder: '#374151',
+    colorBgContainer: '#1F2937',
+    colorPrimary: '#000000',
+    colorText: '#FFFFFF',
+    colorTextSecondary: '#9CA3AF',
   };
 };
 
@@ -41,7 +43,7 @@ function CssWrapper({ children }: { children: React.ReactElement }) {
   }, [mode]);
 
   useEffect(() => {
-    i18n.changeLanguage?.(window.localStorage.getItem(STORAGE_LANG_KEY) || 'zh');
+    i18n.changeLanguage?.(window.localStorage.getItem(STORAGE_LANG_KEY) || 'en');
   }, [i18n]);
 
   return (
@@ -53,26 +55,17 @@ function CssWrapper({ children }: { children: React.ReactElement }) {
 }
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
-  const { isMenuExpand, mode } = useContext(ChatContext);
+  const { mode } = useContext(ChatContext);
   const { i18n } = useTranslation();
   const [isLogin, setIsLogin] = useState(false);
-
   const router = useRouter();
 
-  // 登录检测
   const handleAuth = async () => {
     setIsLogin(false);
-    // 如果已有登录信息，直接展示首页
-    // if (localStorage.getItem(STORAGE_USERINFO_KEY)) {
-    //   setIsLogin(true);
-    //   return;
-    // }
-
-    // MOCK User info
     const user = {
       user_channel: `dbgpt`,
       user_no: `001`,
-      nick_name: `dbgpt`,
+      nick_name: `AI Bot`,
     };
     if (user) {
       localStorage.setItem(STORAGE_USERINFO_KEY, JSON.stringify(user));
@@ -94,16 +87,14 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
       return <>{children}</>;
     }
     return (
-      <div className='flex w-screen h-screen overflow-hidden'>
+      <div className='flex flex-col w-screen h-screen overflow-hidden'>
         <Head>
           <meta name='viewport' content='initial-scale=1.0, width=device-width, maximum-scale=1' />
         </Head>
-        {router.pathname !== '/construct/app/extra' && (
-          <div className={classNames('transition-[width]', isMenuExpand ? 'w-60' : 'w-20', 'hidden', 'md:block')}>
-            <SideBar />
-          </div>
-        )}
-        <div className='flex flex-col flex-1 relative overflow-hidden'>{children}</div>
+        <NavBar />
+        <main className='flex-1 mt-16 overflow-auto'>
+          {children}
+        </main>
         <FloatHelper />
       </div>
     );
@@ -114,8 +105,13 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
       locale={i18n.language === 'en' ? enUS : zhCN}
       theme={{
         token: {
-          colorPrimary: '#0C75FC',
-          borderRadius: 4,
+          colorPrimary: '#000000',
+          borderRadius: 8,
+          colorBgContainer: mode === 'dark' ? '#1F2937' : '#FFFFFF',
+          colorBgElevated: mode === 'dark' ? '#374151' : '#F9FAFB',
+          colorBorder: mode === 'dark' ? '#374151' : '#E5E7EB',
+          colorText: mode === 'dark' ? '#FFFFFF' : '#111827',
+          colorTextSecondary: mode === 'dark' ? '#9CA3AF' : '#6B7280',
         },
         algorithm: mode === 'dark' ? antdDarkTheme : undefined,
       }}

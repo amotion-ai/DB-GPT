@@ -10,6 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppDefaultIcon from '../../common/AppDefaultIcon';
+import { ChevronLeft, ChevronRight, Trash2, Share2 } from 'lucide-react';
 
 const { Sider } = Layout;
 
@@ -117,7 +118,7 @@ const MenuItem: React.FC<{
               e.stopPropagation();
             }}
           >
-            <ShareAltOutlined
+            <Share2
               style={{ fontSize: 16 }}
               onClick={() => {
                 const success = copy(`${location.origin}/chat?scene=${item.chat_mode}&id=${item.conv_uid}`);
@@ -132,7 +133,7 @@ const MenuItem: React.FC<{
               handleDelChat();
             }}
           >
-            <DeleteOutlined style={{ fontSize: 16 }} />
+            <Trash2 style={{ fontSize: 16 }} />
           </div>
         </div>
       )}
@@ -197,7 +198,7 @@ const ChatSider: React.FC<{
       collapsible={true}
       collapsed={collapsed}
       collapsedWidth={0}
-      trigger={collapsed ? <CaretRightOutlined className='text-base' /> : <CaretLeftOutlined className='text-base' />}
+      trigger={collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
       zeroWidthTriggerStyle={triggerStyle}
       onCollapse={collapsed => setCollapsed(collapsed)}
     >

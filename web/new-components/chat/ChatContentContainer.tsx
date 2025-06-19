@@ -1,6 +1,6 @@
 import ChatHeader from '@/new-components/chat/header/ChatHeader';
 import { ChatContentContext } from '@/pages/chat';
-import { VerticalAlignBottomOutlined, VerticalAlignTopOutlined } from '@ant-design/icons';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
@@ -112,7 +112,7 @@ const ChatContentContainer = ({}, ref: React.ForwardedRef<any>) => {
               className='w-10 h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow'
               aria-label='Scroll to top'
             >
-              <VerticalAlignTopOutlined className='text-[#525964] dark:text-[rgba(255,255,255,0.85)]' />
+              <ArrowUp className="w-5 h-5" />
             </button>
           )}
           {!isAtBottom && (
@@ -121,7 +121,7 @@ const ChatContentContainer = ({}, ref: React.ForwardedRef<any>) => {
               className='w-10 h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow'
               aria-label='Scroll to bottom'
             >
-              <VerticalAlignBottomOutlined className='text-[#525964] dark:text-[rgba(255,255,255,0.85)]' />
+              <ArrowDown className="w-5 h-5" />
             </button>
           )}
         </div>

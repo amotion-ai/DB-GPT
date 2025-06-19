@@ -2,10 +2,9 @@ import { ChatContext } from '@/app/chat-context';
 import { DarkSvg, SunnySvg } from '@/components/icons';
 import UserBar from '@/new-components/layout/UserBar';
 import { STORAGE_LANG_KEY, STORAGE_THEME_KEY } from '@/utils/constants/index';
-import Icon, { GlobalOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { Moon, Sun, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Layout, Popover } from 'antd';
 import moment from 'moment';
-import Image from 'next/image';
 import Link from 'next/link';
 import React, { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,19 +52,19 @@ const Sider: React.FC = () => {
       {
         key: 'theme',
         name: t('Theme'),
-        icon: mode === 'dark' ? <Icon component={DarkSvg} /> : <Icon component={SunnySvg} />,
+        icon: mode === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />,
         onClick: handleToggleTheme,
       },
       {
         key: 'language',
         name: t('language'),
-        icon: <GlobalOutlined />,
+        icon: <Globe className="w-5 h-5" />,
         onClick: handleChangeLang,
       },
       {
         key: 'fold',
         name: t(collapsed ? 'Show_Sidebar' : 'Close_Sidebar'),
-        icon: collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />,
+        icon: collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />,
         onClick: handleToggleMenu,
       },
     ];
@@ -79,23 +78,27 @@ const Sider: React.FC = () => {
       collapsible={true}
       collapsed={collapsed}
       trigger={null}
-      className='flex flex-1 flex-col h-full justify-between  bg-bar dark:bg-[#232734] px-4 pt-4'
+      className='flex flex-1 flex-col h-full justify-between bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 px-6 pt-6'
     >
       {collapsed ? (
         <></>
       ) : (
         <>
-          <Link href='/' className='flex items-center justify-center p-2 pb-4'>
-            <Image src='/logo_zh_latest.png' alt='DB-GPT' width={180} height={40} />
+          <Link href='/' className='flex items-center justify-center p-2 pb-6'>
+            <span className='text-xl font-bold text-gray-900 dark:text-white'>DB Copolit</span>
           </Link>
           <div></div>
           <div className='flex flex-col'>
-            <UserBar />
-            <div className='flex items-start justify-between border-t border-dashed border-gray-200 dark:border-gray-700'>
+            <div className='flex items-center w-full h-12 px-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-4'>
+              <div className='w-full'>
+                <UserBar />
+              </div>
+            </div>
+            <div className='flex items-center justify-center py-3 border-t border-gray-200 dark:border-gray-700'>
               {settings.map(item => (
                 <Popover key={item.key} content={item.name}>
                   <div
-                    className='flex-1 flex items-center justify-center cursor-pointer text-xl'
+                    className='flex items-center justify-center w-10 h-10 rounded-lg cursor-pointer text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200'
                     onClick={item.onClick}
                   >
                     {item.icon}

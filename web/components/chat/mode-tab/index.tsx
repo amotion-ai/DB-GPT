@@ -1,6 +1,6 @@
 import { ChatContext } from '@/app/chat-context';
 import { StarsSvg } from '@/components/icons';
-import Icon, { AppstoreFilled } from '@ant-design/icons';
+import { AppWindow } from 'lucide-react';
 import { Radio } from 'antd';
 import { useContext } from 'react';
 import './index.css';
@@ -23,11 +23,11 @@ export default function ModeTab() {
       }}
     >
       <Radio.Button value={false}>
-        <Icon component={StarsSvg} className='mr-1' />
+        <AppWindow className="w-5 h-5" />
         Preview
       </Radio.Button>
       <Radio.Button value={true}>
-        <AppstoreFilled className='mr-1' />
+        <AppWindow className="w-5 h-5" />
         Editor
       </Radio.Button>
     </Radio.Group>

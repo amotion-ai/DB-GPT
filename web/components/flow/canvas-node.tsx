@@ -11,6 +11,7 @@ import { useReactFlow } from 'reactflow';
 import IconWrapper from '../common/icon-wrapper';
 import NodeHandler from './node-handler';
 import NodeParamHandler from './node-param-handler';
+import { Copy, Trash2, Info } from 'lucide-react';
 
 type CanvasNodeProps = {
   data: IFlowNode;
@@ -169,11 +170,15 @@ const CanvasNode: React.FC<CanvasNodeProps> = ({ data }) => {
       content={
         <>
           <IconWrapper className='hover:text-blue-500'>
-            <CopyOutlined className='h-full text-lg cursor-pointer' onClick={copyNode} />
+            <button onClick={copyNode}>
+              <Copy className="w-5 h-5" />
+            </button>
           </IconWrapper>
 
           <IconWrapper className='mt-2 hover:text-red-500'>
-            <DeleteOutlined className='h-full text-lg cursor-pointer' onClick={deleteNode} />
+            <button onClick={deleteNode}>
+              <Trash2 className="w-5 h-5" />
+            </button>
           </IconWrapper>
 
           <IconWrapper className='mt-2'>
@@ -186,7 +191,7 @@ const CanvasNode: React.FC<CanvasNodeProps> = ({ data }) => {
               }
               placement='right'
             >
-              <InfoCircleOutlined className='h-full text-lg cursor-pointer' />
+              <Info className="w-5 h-5" />
             </Tooltip>
           </IconWrapper>
         </>

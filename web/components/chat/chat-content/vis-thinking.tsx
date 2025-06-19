@@ -1,6 +1,7 @@
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface Props {
   content: string;
@@ -18,7 +19,7 @@ export function VisThinking({ content }: Props) {
       >
         <div className='flex items-center'>
           <span className='mr-2 font-medium text-gray-700 dark:text-gray-300'>
-            {expanded ? <DownOutlined /> : <RightOutlined />}
+            {expanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
           </span>
           <span className='text-gray-700 dark:text-gray-300'>{t('cot_title')}</span>
         </div>

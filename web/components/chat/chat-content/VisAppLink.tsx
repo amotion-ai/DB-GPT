@@ -2,6 +2,7 @@ import AppDefaultIcon from '@/new-components/common/AppDefaultIcon';
 import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Spin, Typography } from 'antd';
 import React, { useMemo } from 'react';
+import { CheckCircle, Clock, XCircle, Loader2 } from 'lucide-react';
 
 interface VisAppLinkProps {
   status: string;
@@ -14,13 +15,13 @@ const VisAppLink: React.FC<{ data: VisAppLinkProps }> = ({ data }) => {
   const statusRender = useMemo(() => {
     switch (data.status) {
       case 'todo':
-        return <ClockCircleOutlined />;
+        return <Clock className="w-5 h-5" />;
       case 'failed':
-        return <CloseCircleOutlined className='text-[rgb(255,77,79)]' />;
+        return <XCircle className="w-5 h-5" />;
       case 'complete':
-        return <CheckCircleOutlined className='text-[rgb(82,196,26)]' />;
+        return <CheckCircle className="w-5 h-5" />;
       case 'running':
-        return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+        return <Loader2 className="w-5 h-5 animate-spin" />;
       default:
         return null;
     }

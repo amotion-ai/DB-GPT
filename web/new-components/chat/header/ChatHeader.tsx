@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useRequest } from 'ahooks';
 import AppDefaultIcon from '../../common/AppDefaultIcon';
+import { Share2, Loader2, Star } from 'lucide-react';
 
 const tagColors = ['magenta', 'orange', 'geekblue', 'purple', 'cyan', 'green'];
 
@@ -88,13 +89,13 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
             className='flex items-center justify-center w-10 h-10 bg-[#ffffff99] dark:bg-[rgba(255,255,255,0.2)] border border-white dark:border-[rgba(255,255,255,0.2)] rounded-[50%] cursor-pointer'
           >
             {loading ? (
-              <Spin spinning={loading} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+              <Spin spinning={loading} indicator={<Loader2 className="w-5 h-5 animate-spin" />} />
             ) : (
               <>
                 {isCollected ? (
-                  <StarFilled style={{ fontSize: 18 }} className='text-yellow-400 cursor-pointer' />
+                  <Star className="w-5 h-5 fill-current" />
                 ) : (
-                  <StarOutlined style={{ fontSize: 18, cursor: 'pointer' }} />
+                  <Star className="w-5 h-5" />
                 )}
               </>
             )}
@@ -103,7 +104,7 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
             onClick={shareApp}
             className='flex items-center justify-center w-10 h-10 bg-[#ffffff99] dark:bg-[rgba(255,255,255,0.2)] border border-white dark:border-[rgba(255,255,255,0.2)] rounded-[50%] cursor-pointer'
           >
-            <ExportOutlined className='text-lg' />
+            <Share2 className="w-5 h-5" />
           </div>
         </div>
         {!!appInfo?.recommend_questions?.length && (
@@ -164,17 +165,17 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
           }}
         >
           {loading ? (
-            <Spin spinning={loading} indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+            <Spin spinning={loading} indicator={<Loader2 className="w-5 h-5 animate-spin" />} />
           ) : (
             <>
               {isCollected ? (
-                <StarFilled style={{ fontSize: 18 }} className='text-yellow-400 cursor-pointer' />
+                <Star className="w-5 h-5 fill-current" />
               ) : (
-                <StarOutlined style={{ fontSize: 18, cursor: 'pointer' }} />
+                <Star className="w-5 h-5" />
               )}
             </>
           )}
-          <ExportOutlined
+          <Share2
             className='text-lg'
             onClick={e => {
               e.stopPropagation();

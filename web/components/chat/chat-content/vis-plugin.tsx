@@ -5,6 +5,7 @@ import { ReactNode } from 'react';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import markdownComponents from './config';
+import { Check, Clock, X, Loader2 } from 'lucide-react';
 
 interface IVisPlugin {
   name: string;
@@ -24,19 +25,19 @@ interface Props {
 const pluginViewStatusMapper: Record<IVisPlugin['status'], { bgClass: string; icon: ReactNode }> = {
   todo: {
     bgClass: 'bg-gray-500',
-    icon: <ClockCircleOutlined className='ml-2' />,
+    icon: <Clock className="w-5 h-5" />,
   },
   runing: {
     bgClass: 'bg-blue-500',
-    icon: <LoadingOutlined className='ml-2' />,
+    icon: <Loader2 className="w-5 h-5 animate-spin" />,
   },
   failed: {
     bgClass: 'bg-red-500',
-    icon: <CloseOutlined className='ml-2' />,
+    icon: <X className="w-5 h-5" />,
   },
   complete: {
     bgClass: 'bg-green-500',
-    icon: <CheckOutlined className='ml-2' />,
+    icon: <Check className="w-5 h-5" />,
   },
 };
 

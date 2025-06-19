@@ -4,6 +4,7 @@ import { ChatContentContext } from '@/pages/chat';
 import { LinkOutlined, SelectOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Upload, UploadFile, UploadProps, message } from 'antd';
 import { PropsWithChildren, useContext, useState } from 'react';
+import { Link, Check, Upload as UploadIcon } from 'lucide-react';
 
 interface Props {
   convUid: string;
@@ -94,7 +95,7 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
               className='flex justify-center items-center'
               type='primary'
               disabled={loading}
-              icon={<SelectOutlined />}
+              icon={<Check className="w-5 h-5" />}
             >
               Select File
             </Button>
@@ -105,14 +106,14 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
           loading={loading}
           className='flex justify-center items-center'
           disabled={!fileList.length}
-          icon={<UploadOutlined />}
+          icon={<UploadIcon className="w-5 h-5" />}
           onClick={onUpload}
         >
           {loading ? (percent === 100 ? 'Analysis' : 'Uploading') : 'Upload'}
         </Button>
         {!!fileList.length && (
           <div className='mt-2 text-gray-500 text-sm flex items-center' onClick={() => setFileList([])}>
-            <LinkOutlined className='mr-2' />
+            <Link className="w-5 h-5 mr-2" />
             <span>{fileList[0]?.name}</span>
           </div>
         )}

@@ -12,7 +12,7 @@ import MonacoEditor, { ISession } from './monaco-editor';
 
 import SplitScreenHeight from '@/components/icons/split-screen-height';
 import SplitScreenWeight from '@/components/icons/split-screen-width';
-import { CaretRightOutlined, LeftOutlined, RightOutlined, SaveFilled } from '@ant-design/icons';
+import { ChevronRight, ChevronLeft, ChevronRight as RightIcon, Save } from 'lucide-react';
 import { ColumnType } from 'antd/es/table';
 import classNames from 'classnames';
 import MyEmpty from '../common/MyEmpty';
@@ -534,7 +534,7 @@ function DbEditor() {
                 setIsMenuExpand(!isMenuExpand);
               }}
             >
-              {!isMenuExpand ? <LeftOutlined /> : <RightOutlined />}
+              {!isMenuExpand ? <ChevronLeft className="w-5 h-5" /> : <RightIcon className="w-5 h-5" />}
             </div>
           </div>
         </div>
@@ -546,7 +546,7 @@ function DbEditor() {
                 className='text-xs rounded-none'
                 size='small'
                 type='primary'
-                icon={<CaretRightOutlined />}
+                icon={<ChevronRight className="w-5 h-5" />}
                 loading={runLoading || runChartsLoading}
                 onClick={async () => {
                   if (scene === 'chat_dashboard') {
@@ -563,7 +563,7 @@ function DbEditor() {
                 type='primary'
                 size='small'
                 loading={submitLoading || submitChartLoading}
-                icon={<SaveFilled />}
+                icon={<Save className="w-5 h-5" />}
                 onClick={async () => {
                   if (scene === 'chat_dashboard') {
                     await submitChart();

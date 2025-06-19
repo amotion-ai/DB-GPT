@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash';
 import { useSearchParams } from 'next/navigation';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Copy, RefreshCw } from 'lucide-react';
 
 import MyEmpty from '../common/MyEmpty';
 import CompletionInput from '../common/completion-input';
@@ -194,7 +195,7 @@ const Completion = ({ messages, onSubmit, onFormatContent }: Props) => {
                           slots={{ root: IconButton }}
                           slotProps={{ root: { variant: 'plain', color: 'primary' } }}
                         >
-                          <RedoOutlined />
+                          <RefreshCw className="w-5 h-5" />
                           &nbsp;<span className='text-sm'>{t('Retry')}</span>
                         </Button>
                       ) : null}
@@ -214,7 +215,7 @@ const Completion = ({ messages, onSubmit, onFormatContent }: Props) => {
                             slotProps={{ root: { variant: 'plain', color: 'primary' } }}
                             sx={{ borderRadius: 40 }}
                           >
-                            <CopyOutlined />
+                            <Copy className="w-5 h-5" />
                           </Button>
                         </Tooltip>
                       </div>

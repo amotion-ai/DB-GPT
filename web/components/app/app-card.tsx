@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import IconFont from '@/new-components/common/Icon';
 import { useRequest } from 'ahooks';
 import GPTCard from '../common/gpt-card';
+import { Trash2, MessageSquare, Star, AlertTriangle } from 'lucide-react';
 
 interface IProps {
   updateApps: (params?: Record<string, any>) => void;
@@ -37,7 +38,7 @@ export default function AppCard(props: IProps) {
   const showDeleteConfirm = () => {
     confirm({
       title: t('Tips'),
-      icon: <WarningOutlined />,
+      icon: <AlertTriangle className="w-5 h-5" />,
       content: `do you want delete the application?`,
       okText: 'Yes',
       okType: 'danger',
@@ -153,19 +154,19 @@ export default function AppCard(props: IProps) {
     const defaultArr = [
       {
         label: t('Chat'),
-        children: <MessageFilled />,
+        children: <MessageSquare className="w-5 h-5" />,
         onClick: handleChat,
       },
       {
         label: t('collect'),
-        children: <StarFilled className={app.is_collected === 'false' ? 'text-gray-400' : 'text-yellow-400'} />,
+        children: <Star className="w-5 h-5 fill-current" />,
         onClick: collect,
       },
     ];
     if (canDelete) {
       defaultArr.push({
         label: t('Delete'),
-        children: <DeleteFilled />,
+        children: <Trash2 className="w-5 h-5" />,
         onClick: () => showDeleteConfirm() as any,
       });
     }

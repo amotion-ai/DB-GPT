@@ -3,7 +3,7 @@ import DBIcon from '@/components/common/db-icon';
 import { ChatContentContext } from '@/pages/chat';
 import { IDB } from '@/types/chat';
 import { dbMapper } from '@/utils';
-import { ExperimentOutlined, FolderAddOutlined } from '@ant-design/icons';
+import { Beaker, FolderPlus } from 'lucide-react';
 import { useAsyncEffect, useRequest } from 'ahooks';
 import type { UploadFile } from 'antd';
 import { Select, Tooltip, Upload } from 'antd';
@@ -118,7 +118,7 @@ const Resource: React.FC<{
     return (
       <Tooltip title={t('extend_tip')}>
         <div className='flex w-8 h-8 items-center justify-center rounded-md hover:bg-[rgb(221,221,221,0.6)]'>
-          <ExperimentOutlined className='text-lg cursor-not-allowed opacity-30' />
+          <Beaker className="w-5 h-5" />
         </div>
       </Tooltip>
     );
@@ -165,7 +165,7 @@ const Resource: React.FC<{
         >
           <Tooltip title={title} arrow={false} placement='bottom'>
             <div className='flex w-8 h-8 items-center justify-center rounded-md hover:bg-[rgb(221,221,221,0.6)]'>
-              <FolderAddOutlined className={classNames('text-xl', { 'cursor-pointer': !isDisabled })} />
+              <FolderPlus className={classNames('text-xl', { 'cursor-pointer': !isDisabled })} />
             </div>
           </Tooltip>
         </Upload>
