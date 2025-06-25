@@ -144,6 +144,14 @@ const CreateAppModal: React.FC<{
     return data?.filter(item => item.value === appInfo?.team_mode)?.[0];
   }, [appInfo, data]);
 
+  // Custom team_mode selection
+  const teamModeOptions = useMemo(() => {
+    return data?.map(item => ({
+      label: item.name,
+      value: item.value,
+    }));
+  }, [data]);
+
   if (loading) {
     return null;
   }
@@ -220,14 +228,11 @@ const CreateAppModal: React.FC<{
                   autoSize={{ minRows: 2.5 }}
                 />
               </Form.Item>
-              {/* <Form.Item label="应用图标：" name="app_icon" valuePropName="fileList">
-              <Upload listType="picture-card">
-                <button style={{ border: 0, background: 'none' }} type="button">
-                  <PlusOutlined />
-                  <div style={{ marginTop: 8 }}>上传图标</div>
-                </button>
-              </Upload>
-            </Form.Item> */}
+              {/* <Form.Item label="App Icon:" name="app_icon" valuePropName="fileList">
+                <Upload listType="picture-card" maxCount={1}>
+                  <div style={{ marginTop: 8 }}>Upload Icon</div>
+                </Upload>
+              </Form.Item> */}
             </Form>
             <Divider type='vertical' className='h-auto mx-6 bg-[rgba(0,0,0,0.06)] dark:bg-[rgba(255,255,255,0.5)] ' />
             <div className='flex flex-col w-2/5 pl-6 pt-8 '>

@@ -10,6 +10,7 @@ import { t } from 'i18next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
+import { Send } from 'lucide-react';
 
 function ChatDefault() {
   const { setCurrentDialogInfo, model } = useContext(ChatContext);
@@ -169,7 +170,7 @@ function ChatDefault() {
                     }}
                   >
                     <span>{help.question}</span>
-                    <Image key='image_explore' src={'/icons/send.png'} alt='construct_image' width={20} height={20} />
+                    <Send size={20} />
                   </span>
                 ))}
               </div>

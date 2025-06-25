@@ -13,19 +13,19 @@ import { ConfigurableParams } from '@/types/common';
 import { GET, POST } from '../index';
 
 /**
- * 查询team_mode模式
+ * Query team_mode modes
  */
 export const getTeamMode = () => {
   return GET<null, TeamMode[]>('/api/v1/team-mode/list');
 };
 /**
- *  创建应用
+ * Create application
  */
 export const addApp = (data: CreateAppParams) => {
   return POST<CreateAppParams, IApp>('/api/v1/app/create', data);
 };
 /**
- *  更新应用
+ * Update application
  */
 export const updateApp = (data: CreateAppParams) => {
   return POST<CreateAppParams, IApp>('/api/v1/app/edit', data);

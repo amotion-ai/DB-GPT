@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AppDefaultIcon from '../../common/AppDefaultIcon';
-import { ChevronLeft, ChevronRight, Trash2, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trash2, Share2, Sparkle } from 'lucide-react';
 
 const { Sider } = Layout;
 
@@ -211,7 +211,7 @@ const ChatSider: React.FC<{
             item={{
               label: t('assistant'),
               key: 'default',
-              icon: <Image src='/LOGO_SMALL.png' alt='default' width={24} height={24} className='flex-1' />,
+              icon: <Sparkle size={24} className='text-[#2867f5]' />,
               default: true,
             }}
             order={order}

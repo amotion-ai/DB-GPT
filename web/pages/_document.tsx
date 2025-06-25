@@ -37,10 +37,14 @@ class MyDocument extends Document {
     return (
       <Html lang='en'>
         <Head>
-          <link rel='icon' href='/favicon.ico' />
+          <link rel='icon' type='image/png' sizes='32x32' href='/LOGO_SMALL.png' />
+          <link rel='icon' type='image/png' sizes='16x16' href='/LOGO_SMALL.png' />
+          <link rel='apple-touch-icon' href='/LOGO_SMALL.png' />
           <meta name='description' content='Revolutionizing Database Interactions with Private LLM Technology' />
           <meta property='og:description' content='eosphoros-ai' />
           <meta property='og:title' content='DB-GPT' />
+          {/* Google Fonts for modern look */}
+          <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />

@@ -109,10 +109,10 @@ const ChatFeedback = ({ conv_index, question, knowledge_space, select_param }: P
       }),
     )
       .then(_ => {
-        messageApi.open({ type: 'success', content: 'save success' });
+        messageApi.open({ type: 'success', content: t('Save_Success') });
       })
       .catch(_ => {
-        messageApi.open({ type: 'error', content: 'save error' });
+        messageApi.open({ type: 'error', content: t('Save_Error') });
       });
   };
   return (

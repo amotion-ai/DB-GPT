@@ -12,6 +12,7 @@ import { cloneDeep } from 'lodash';
 import { useSearchParams } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
+import { Code, MessageSquare } from 'lucide-react';
 
 const ChatCompletion: React.FC = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
@@ -86,35 +87,69 @@ const ChatCompletion: React.FC = () => {
   }, [history, history[history.length - 1]?.context]);
 
   return (
-    <div className='flex flex-col w-5/6 mx-auto' ref={scrollableRef}>
-      {!!showMessages.length &&
-        showMessages.map((content, index) => {
-          return (
-            <ChatContent
-              key={index}
-              content={content}
-              onLinkClick={() => {
-                setJsonModalOpen(true);
-                setJsonValue(JSON.stringify(content?.context, null, 2));
-              }}
-            />
-          );
-        })}
+    <div className='flex flex-col w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8' ref={scrollableRef}>
+      {/* Welcome Message for Empty State */}
+      {!showMessages.length && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
+            <MessageSquare className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+            Welcome to DB-GPT Chat
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 max-w-md">
+            Start a conversation with your AI assistant. Ask questions, get insights, or explore your data.
+          </p>
+        </div>
+      )}
+
+      {/* Chat Messages */}
+      {!!showMessages.length && (
+        <div className="space-y-2">
+          {showMessages.map((content, index) => {
+            return (
+              <ChatContent
+                key={index}
+                content={content}
+                onLinkClick={() => {
+                  setJsonModalOpen(true);
+                  setJsonValue(JSON.stringify(content?.context, null, 2));
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Enhanced JSON Modal */}
       <Modal
-        title='JSON Editor'
+        title={
+          <div className="flex items-center gap-2">
+            <Code className="w-5 h-5 text-blue-600" />
+            <span>JSON Editor</span>
+          </div>
+        }
         open={jsonModalOpen}
-        width='60%'
+        width='70%'
         cancelButtonProps={{
           hidden: true,
         }}
+        okText="Close"
         onOk={() => {
           setJsonModalOpen(false);
         }}
         onCancel={() => {
           setJsonModalOpen(false);
         }}
+        className="modern-modal"
       >
-        <MonacoEditor className='w-full h-[500px]' language='json' value={jsonValue} />
+        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+          <MonacoEditor 
+            className='w-full h-[500px] rounded-lg overflow-hidden' 
+            language='json' 
+            value={jsonValue} 
+          />
+        </div>
       </Modal>
     </div>
   );

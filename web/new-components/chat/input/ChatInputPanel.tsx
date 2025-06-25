@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useSearchParams } from 'next/navigation';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Send, Paperclip, Mic, Smile } from 'lucide-react';
 
 import { UserChatContent } from '@/types/chat';
 import { parseResourceValue } from '@/utils';
@@ -89,65 +89,136 @@ const ChatInputPanel: React.FC<{ ctrl: AbortController }> = ({ ctrl }) => {
   };
 
   return (
-    <div className='flex flex-col w-5/6 mx-auto pt-4 pb-6 bg-transparent'>
+    <div className='flex flex-col w-5/6 mx-auto pt-6 pb-8 bg-transparent'>
+      {/* Enhanced Input Container */}
       <div
-        className={`flex flex-1 flex-col bg-white dark:bg-[rgba(255,255,255,0.16)] px-5 py-4 pt-2 rounded-xl relative border-t border-b border-l border-r dark:border-[rgba(255,255,255,0.6)] ${
-          isFocus ? 'border-[#0c75fc]' : ''
-        }`}
+        className={classNames(
+          'relative group',
+          'bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl',
+          'border border-white/30 dark:border-gray-700/50',
+          'rounded-2xl shadow-lg hover:shadow-xl',
+          'transition-all duration-300',
+          isFocus && 'ring-2 ring-blue-500/50 border-blue-500/50'
+        )}
         id='input-panel'
       >
-        <ToolsBar ctrl={ctrl} />
-        <Input.TextArea
-          placeholder={t('input_tips')}
-          className='w-full h-20 resize-none border-0 p-0 focus:shadow-none dark:bg-transparent'
-          value={userInput}
-          onKeyDown={e => {
-            if (e.key === 'Enter') {
-              if (e.shiftKey) {
-                return;
+        {/* Tools Bar */}
+        <div className="px-4 pt-4">
+          <ToolsBar ctrl={ctrl} />
+        </div>
+
+        {/* Input Area */}
+        <div className="relative px-4 pb-4">
+          <Input.TextArea
+            placeholder={t('input_tips')}
+            className={classNames(
+              'w-full min-h-[80px] max-h-[200px]',
+              'resize-none border-0 p-0',
+              'bg-transparent',
+              'text-gray-800 dark:text-gray-200',
+              'placeholder-gray-500 dark:placeholder-gray-400',
+              'focus:shadow-none focus:outline-none',
+              'text-sm leading-relaxed'
+            )}
+            value={userInput}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                if (e.shiftKey) {
+                  return;
+                }
+                if (isZhInput) {
+                  return;
+                }
+                e.preventDefault();
+                if (!userInput.trim() || replyLoading) {
+                  return;
+                }
+                onSubmit();
               }
-              if (isZhInput) {
-                return;
-              }
-              e.preventDefault();
-              if (!userInput.trim() || replyLoading) {
-                return;
-              }
-              onSubmit();
-            }
-          }}
-          onChange={e => {
-            setUserInput(e.target.value);
-          }}
-          onFocus={() => {
-            setIsFocus(true);
-          }}
-          onBlur={() => setIsFocus(false)}
-          onCompositionStart={() => setIsZhInput(true)}
-          onCompositionEnd={() => setIsZhInput(false)}
-        />
-        <Button
-          type='primary'
-          className={classNames(
-            'flex items-center justify-center w-14 h-8 rounded-lg text-sm absolute right-4 bottom-3 bg-button-gradient border-0',
-            {
-              'cursor-not-allowed': !userInput.trim(),
-            },
-          )}
-          onClick={() => {
-            if (replyLoading || !userInput.trim()) {
-              return;
-            }
-            onSubmit();
-          }}
-        >
-          {replyLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            t('sent')
-          )}
-        </Button>
+            }}
+            onChange={e => {
+              setUserInput(e.target.value);
+            }}
+            onFocus={() => {
+              setIsFocus(true);
+            }}
+            onBlur={() => setIsFocus(false)}
+            onCompositionStart={() => setIsZhInput(true)}
+            onCompositionEnd={() => setIsZhInput(false)}
+          />
+
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+            {/* Left Actions */}
+            <div className="flex items-center gap-2">
+              <button
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                title="Attach file"
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
+              <button
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                title="Voice input"
+              >
+                <Mic className="w-4 h-4" />
+              </button>
+              <button
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                title="Emoji"
+              >
+                <Smile className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Send Button */}
+            <button
+              className={classNames(
+                'flex items-center justify-center gap-2',
+                'px-6 py-2 rounded-xl text-sm font-medium',
+                'transition-all duration-300 transform',
+                'disabled:opacity-50 disabled:cursor-not-allowed',
+                userInput.trim() && !replyLoading
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl hover:scale-105'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+              )}
+              onClick={() => {
+                if (replyLoading || !userInput.trim()) {
+                  return;
+                }
+                onSubmit();
+              }}
+              disabled={replyLoading || !userInput.trim()}
+            >
+              {replyLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Thinking...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  <span>{t('sent')}</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Focus Indicator */}
+        {isFocus && (
+          <div className="absolute inset-0 rounded-2xl ring-2 ring-blue-500/20 pointer-events-none"></div>
+        )}
       </div>
+
+      {/* Character Count */}
+      {userInput.length > 0 && (
+        <div className="flex justify-end mt-2">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {userInput.length} characters
+          </span>
+        </div>
+      )}
     </div>
   );
 };

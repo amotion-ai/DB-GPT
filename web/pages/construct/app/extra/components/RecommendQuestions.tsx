@@ -29,6 +29,11 @@ const RecommendQuestions: React.FC<{
     updateData(recommendQuestions?.filter(question => !!question.question));
   }, [recommendQuestions, updateData]);
 
+  // Return data to consuming components in real-time
+  const handleQuestionChange = (questions: string[]) => {
+    updateData(questions.map(question => ({ question, valid: false })));
+  };
+
   return (
     <div className={cls(styles['recommend-questions-container'], classNames)}>
       <Form<FormRecommendQuestion>

@@ -136,14 +136,14 @@ export default function DocUploadForm(props: IProps) {
         >
           <TextArea rows={4} />
         </Form.Item>
-        <Form.Item<FieldType> label={`${t('Correlation_problem')}:`}>
+        <Form.Item<FieldType> label={t('Related_Questions')}>
           <Form.List name='questions'>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                     <Form.Item label='' name={[name, 'question']} className='grow'>
-                      <Input placeholder={t('input_question')} />
+                      <Input placeholder={t('Please_Input_Question')} />
                     </Form.Item>
                     <Form.Item>
                       <Minus className="w-5 h-5"
@@ -191,14 +191,14 @@ export default function DocUploadForm(props: IProps) {
         >
           <Input className='mb-5  h-12' placeholder={t('Please_input_the_Web_Page_URL')} />
         </Form.Item>
-        <Form.Item<FieldType> label={`${t('Correlation_problem')}:`}>
+        <Form.Item<FieldType> label={t('Related_Questions')}>
           <Form.List name='questions'>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                     <Form.Item label='' name={[name, 'question']} className='grow'>
-                      <Input placeholder={t('input_question')} />
+                      <Input placeholder={t('Please_Input_Question')} />
                     </Form.Item>
                     <Form.Item>
                       <Minus className="w-5 h-5"
@@ -260,14 +260,14 @@ export default function DocUploadForm(props: IProps) {
         >
           <Input className='mb-5  h-12' placeholder={t('input_document_token')} />
         </Form.Item>
-        <Form.Item<FieldType> label={`${t('Correlation_problem')}:`}>
+        <Form.Item<FieldType> label={t('Related_Questions')}>
           <Form.List name='questions'>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                     <Form.Item label='' name={[name, 'question']} className='grow'>
-                      <Input placeholder={t('input_question')} />
+                      <Input placeholder={t('Please_Input_Question')} />
                     </Form.Item>
                     <Form.Item>
                       <Minus className="w-5 h-5"
@@ -340,14 +340,14 @@ export default function DocUploadForm(props: IProps) {
             </p>
           </Dragger>
         </Form.Item>
-        <Form.Item<FieldType> label='关联问题:'>
+        <Form.Item<FieldType> label={t('Related_Questions')}>
           <Form.List name='questions'>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                     <Form.Item label='' name={[name, 'question']} className='grow'>
-                      <Input placeholder='请输入问题' />
+                      <Input placeholder={t('Please_Input_Question')} />
                     </Form.Item>
                     <Form.Item>
                       <Minus className="w-5 h-5"

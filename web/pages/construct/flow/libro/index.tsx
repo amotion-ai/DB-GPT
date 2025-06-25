@@ -11,22 +11,18 @@ const Libro: React.FC = () => {
 
   const id = searchParams?.get('id') || '';
 
+  // Listen for language switch events
   useEffect(() => {
-    console.log(window.location);
-    // 监听语言切换事件
-    const handleLanguageChange = (lng: string) => {
-      iframeRef.current?.contentWindow?.postMessage(
-        `lang:${lng}`,
-        `${window.location.protocol}//${window.location.hostname}:5671`,
-      );
+    const handleLanguageChange = () => {
+      // Handle language change logic
     };
 
-    // 注册监听器
-    i18n.on('languageChanged', handleLanguageChange);
+    // Register listener
+    window.addEventListener('languageChange', handleLanguageChange);
 
-    // 清理监听器
+    // Clean up listener
     return () => {
-      i18n.off('languageChanged', handleLanguageChange);
+      window.removeEventListener('languageChange', handleLanguageChange);
     };
   }, []);
 

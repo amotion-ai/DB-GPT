@@ -68,7 +68,7 @@ function Agent() {
       setUploading(true);
       const [err] = await apiInterceptors(postAgentHubUpdate());
       if (err) return;
-      message.success('success');
+      message.success(t('Update_Success'));
       refresh();
     } finally {
       setUploading(false);
@@ -83,7 +83,7 @@ function Agent() {
       setActionIndex(index);
       const [err] = await apiInterceptors((isInstall ? postAgentInstall : postAgentUninstall)(name));
       if (!err) {
-        message.success('success');
+        message.success(t(isInstall ? 'Install_Success' : 'Uninstall_Success'));
         refresh();
       }
       setActionIndex(undefined);

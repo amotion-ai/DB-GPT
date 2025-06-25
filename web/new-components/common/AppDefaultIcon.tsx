@@ -1,39 +1,38 @@
 import {
-  ColorfulChat,
-  ColorfulDB,
-  ColorfulDashboard,
-  ColorfulData,
-  ColorfulDoc,
-  ColorfulExcel,
-  ColorfulPlugin,
-} from '@/components/icons';
-import Icon from '@ant-design/icons';
+  BookOpen,
+  Database,
+  FileSpreadsheet,
+  BarChart3,
+  MessageSquare,
+  Puzzle,
+} from 'lucide-react';
 import React, { useCallback } from 'react';
 
 const AppDefaultIcon: React.FC<{ scene: string; width?: number; height?: number }> = ({ width, height, scene }) => {
+  const size = width || 28;
   const returnComponent = useCallback(() => {
     switch (scene) {
       case 'chat_knowledge':
-        return ColorfulDoc;
+        return <BookOpen width={size} height={size} />;
       case 'chat_with_db_execute':
-        return ColorfulData;
+        return <Database width={size} height={size} />;
       case 'chat_excel':
-        return ColorfulExcel;
+        return <FileSpreadsheet width={size} height={size} />;
       case 'chat_with_db_qa':
       case 'chat_dba':
-        return ColorfulDB;
+        return <Database width={size} height={size} />;
       case 'chat_dashboard':
-        return ColorfulDashboard;
+        return <BarChart3 width={size} height={size} />;
       case 'chat_agent':
-        return ColorfulPlugin;
+        return <Puzzle width={size} height={size} />;
       case 'chat_normal':
-        return ColorfulChat;
+        return <MessageSquare width={size} height={size} />;
       default:
-        return;
+        return <MessageSquare width={size} height={size} />;
     }
-  }, [scene]);
+  }, [scene, size]);
 
-  return <Icon className={`w-${width || 7} h-${height || 7}`} component={returnComponent()} />;
+  return <span className={`w-${width || 7} h-${height || 7} flex items-center justify-center`}>{returnComponent()}</span>;
 };
 
 export default AppDefaultIcon;

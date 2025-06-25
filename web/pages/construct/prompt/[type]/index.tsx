@@ -68,12 +68,12 @@ interface TopFormProps {
   prompt_code: string;
 }
 
-// 自定义温度选项
+// Custom temperature options
 const TemperatureItem: React.FC<{
   value?: any;
   onChange?: (value: any) => void;
 }> = ({ value, onChange }) => {
-  // temperature变化;
+  // Temperature changes
   const onTemperatureChange = (value: any) => {
     if (isNaN(value)) {
       return;
@@ -101,23 +101,23 @@ const AddOrEditPrompt: React.FC = () => {
 
   const userInfo = useUser();
 
-  // prompt内容
+  // Prompt content
   const [value, setValue] = useState<string>('');
-  // 输入参数
+  // Input parameters
   const [variables, setVariables] = useState<string[]>([]);
-  // 输出结构
+  // Output structure
   const [responseTemplate, setResponseTemplate] = useState<any>({});
-  // LLM输出
+  // LLM output
   const [history, setHistory] = useState<Record<string, any>[]>([]);
   const [llmLoading, setLlmLoading] = useState<boolean>(false);
 
-  // prompt基本信息
+  // Prompt basic information
   const [topForm] = Form.useForm<TopFormProps>();
-  // 输入参数
+  // Input parameters
   const [midForm] = Form.useForm();
-  // 模型，温度，语言
+  // Model, temperature, language
   const [bottomForm] = Form.useForm<BottomFormProps>();
-  // 验证错误信息
+  // Validation error messages
   const [errorMessage, setErrorMessage] = useState<Record<string, any>>();
 
   const promptType = Form.useWatch('prompt_type', topForm);
@@ -136,12 +136,12 @@ const AddOrEditPrompt: React.FC = () => {
     });
   }, [modelList]);
 
-  // md编辑器变化
+  // MD editor changes
   const onChange = useCallback((props: any) => {
     setValue(props.text);
   }, []);
 
-  // 获取target选项
+  // Get target options
   const {
     data,
     run: getTargets,
@@ -150,7 +150,7 @@ const AddOrEditPrompt: React.FC = () => {
     manual: true,
   });
 
-  // 获取template
+  // Get template
   const { run: getTemplate } = useRequest(
     async (target: string) =>
       await promptTemplateLoad({
@@ -175,7 +175,7 @@ const AddOrEditPrompt: React.FC = () => {
     },
   );
 
-  // add or edit prompt
+  // Add or edit prompt
   const { run: operatePrompt, loading: operateLoading } = useRequest(
     async (params: OperatePromptParams) => {
       if (type === 'add') {
@@ -213,7 +213,7 @@ const AddOrEditPrompt: React.FC = () => {
     });
   };
 
-  // llm测试
+  // LLM test
   const onLLMTest = async () => {
     if (llmLoading) {
       return;
@@ -268,28 +268,28 @@ const AddOrEditPrompt: React.FC = () => {
             setLlmLoading(false);
           },
           onerror(err) {
-            throw new Error(err);
+            setLlmLoading(false);
+            tempHistory[index].context = 'Sorry, we meet some error, please try again later';
+            setHistory([...tempHistory]);
           },
-          onmessage: event => {
-            let message = event.data;
-            if (!message) return;
+          onmessage(event) {
             try {
-              message = JSON.parse(message).vis;
-            } catch {
-              message.replaceAll('\\n', '\n');
-            }
-            if (message === '[DONE]') {
+              const message = event.data;
+              if (message === '[DONE]') {
+                setLlmLoading(false);
+                return;
+              } else {
+                tempHistory[index].context = message;
+                setHistory([...tempHistory]);
+              }
+            } catch (error) {
               setLlmLoading(false);
-            } else if (message?.startsWith('[ERROR]')) {
-              setLlmLoading(false);
-              tempHistory[index].context = message?.replace('[ERROR]', '');
-            } else {
-              tempHistory[index].context = message;
+              tempHistory[index].context = 'Sorry, we meet some error, please try again later';
               setHistory([...tempHistory]);
             }
           },
         });
-      } catch {
+      } catch (error) {
         setLlmLoading(false);
         tempHistory[index].context = 'Sorry, we meet some error, please try again later';
         setHistory([...tempHistory]);
@@ -297,53 +297,38 @@ const AddOrEditPrompt: React.FC = () => {
     });
   };
 
-  // 输出验证
-  const { run, loading: verifyLoading } = useRequest(
+  // LLM output verification
+  const { run: onLLMOutVerify, loading: verifyLoading } = useRequest(
     async () =>
       await llmOutVerify({
         llm_out: history[0].context,
         prompt_type: topForm.getFieldValue('prompt_type'),
         chat_scene: topForm.getFieldValue('target'),
+        prompt_name: topForm.getFieldValue('prompt_name'),
+        prompt_code: topForm.getFieldValue('prompt_code'),
+        content: value,
+        response_schema: JSON.stringify(responseTemplate),
+        input_variables: JSON.stringify(variables),
+        prompt_language: bottomForm.getFieldValue('prompt_language'),
+        prompt_desc: '',
+        user_name: userInfo.nick_name,
+        temperature: bottomForm.getFieldValue('temperature'),
+        debug_model: bottomForm.getFieldValue('model'),
+        input_values: midForm.getFieldsValue(),
+        user_input: bottomForm.getFieldValue('user_input'),
       }),
     {
       manual: true,
       onSuccess: res => {
         if (res?.data?.success) {
-          setErrorMessage({ msg: '验证通过', status: 'success' });
+          message.success(t('Output_verification_success'));
         } else {
-          setErrorMessage({ msg: res?.data?.err_msg, status: 'error' });
+          message.error(res?.data?.err_msg || t('Output_verification_failed'));
         }
       },
     },
   );
 
-  // 设置默认模型
-  useEffect(() => {
-    if (model) {
-      bottomForm.setFieldsValue({
-        model,
-      });
-    }
-  }, [bottomForm, model]);
-
-  // 类型改变获取相应的场景
-  useEffect(() => {
-    if (promptType) {
-      getTargets(promptType);
-    }
-  }, [getTargets, promptType]);
-
-  const targetOptions = useMemo(() => {
-    return data?.data?.data?.map((option: any) => {
-      return {
-        ...option,
-        value: option.name,
-        label: option.name,
-      };
-    });
-  }, [data]);
-
-  // 编辑进入填充内容
   useEffect(() => {
     if (type === 'edit') {
       const editData = JSON.parse(localStorage.getItem('edit_prompt_data') || '{}');
@@ -352,185 +337,125 @@ const AddOrEditPrompt: React.FC = () => {
       topForm.setFieldsValue({
         prompt_type: editData.prompt_type,
         prompt_name: editData.prompt_name,
-        prompt_code: editData.prompt_code,
         target: editData.chat_scene,
+        prompt_code: editData.prompt_code,
       });
       bottomForm.setFieldsValue({
         model: editData.model,
+        temperature: editData.temperature,
         prompt_language: editData.prompt_language,
+        user_input: editData.user_input,
       });
+      getTargets(editData.prompt_type);
+      getTemplate(editData.chat_scene);
     }
-  }, [bottomForm, topForm, type]);
+  }, [type, topForm, bottomForm, getTargets, getTemplate]);
 
   return (
-    <div
-      className={`flex flex-col w-full h-full justify-between dark:bg-gradient-dark ${styles['prompt-operate-container']}`}
-    >
-      <header className='flex items-center justify-between px-6 py-2 h-14 border-b border-[#edeeef]'>
-        <Space className='flex items-center'>
-          <LeftOutlined
-            className='text-base cursor-pointer hover:text-[#0c75fc]'
-            onClick={() => {
-              localStorage.removeItem('edit_prompt_data');
-              router.replace('/construct/prompt');
-            }}
-          />
-          <span className='font-medium text-sm'>{type === 'add' ? t('Add') : t('Edit')} Prompt</span>
-        </Space>
-        <Space>
-          <Button type='primary' onClick={operateFn} loading={operateLoading}>
-            {type === 'add' ? t('save') : t('update')}
-          </Button>
-        </Space>
-      </header>
-      <section className='flex h-full p-4 gap-4'>
-        {/* 编辑展示区 */}
-        <div className='flex flex-col flex-1 h-full overflow-y-auto pb-8 '>
-          <MarkdownEditor
-            value={value}
-            onChange={onChange}
-            renderHTML={text => mdParser.render(text)}
-            view={{ html: false, md: true, menu: true }}
-          />
-          {/* llm 输出区域 */}
-          {history.length > 0 && (
-            <Card
-              title={
-                <Space>
-                  <span>LLM OUT</span>
-                  {errorMessage && <Alert message={errorMessage.msg} type={errorMessage.status} showIcon />}
-                </Space>
-              }
-              className='mt-2'
-            >
-              <div className=' max-h-[400px] overflow-y-auto'>
-                <MarkdownContext>{history?.[0]?.context.replace(/\\n/gm, '\n')}</MarkdownContext>
-              </div>
-            </Card>
-          )}
-        </div>
-        {/* 功能区 */}
-        <div className='flex flex-col w-2/5 pb-8 overflow-y-auto'>
-          <Card className='mb-4'>
-            <Form form={topForm}>
-              <div className='flex w-full gap-1 justify-between'>
-                <Form.Item
-                  label='Type'
-                  name='prompt_type'
-                  className='w-2/5'
-                  rules={[{ required: true, message: t('select_type') }]}
+    <div className='flex flex-col h-full'>
+      <div className='flex flex-col flex-1 h-full overflow-y-auto pb-8 '>
+        <MarkdownEditor
+          value={value}
+          onChange={onChange}
+          renderHTML={text => mdParser.render(text)}
+          view={{ html: false, md: true, menu: true }}
+        />
+        {/* LLM output area */}
+        {history.length > 0 && (
+          <Card
+            title={
+              <div className='flex items-center justify-between'>
+                <span>{t('LLM_test')}</span>
+                <Button
+                  type='primary'
+                  onClick={async () => {
+                    if (verifyLoading || !history[0]?.context) {
+                      return;
+                    }
+                    await onLLMOutVerify();
+                  }}
+                  loading={verifyLoading}
                 >
-                  <Select options={TypeOptions} placeholder={t('select_type')} allowClear />
-                </Form.Item>
-                <Form.Item name='target' className='w-3/5' rules={[{ required: true, message: t('select_scene') }]}>
-                  <Select
-                    loading={loading}
-                    placeholder={t('select_scene')}
-                    allowClear
-                    showSearch
-                    onChange={async value => {
-                      await getTemplate(value);
-                    }}
-                  >
-                    {targetOptions?.map(option => (
-                      <Select.Option key={option.value} title={option.desc}>
-                        {option.label}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+                  {t('Output_verification')}
+                </Button>
               </div>
-              {type === 'edit' && (
-                <Form.Item label='Code' name='prompt_code'>
-                  <Input disabled />
-                </Form.Item>
-              )}
-              <Form.Item
-                label='Name'
-                name='prompt_name'
-                className='m-0'
-                rules={[{ required: true, message: t('Please_input_prompt_name') }]}
-              >
-                <Input placeholder={t('Please_input_prompt_name')} />
-              </Form.Item>
-            </Form>
+            }
+            className='mt-4'
+          >
+            <div className=' max-h-[400px] overflow-y-auto'>
+              <MarkdownContext>{history?.[0]?.context.replace(/\\n/gm, '\n')}</MarkdownContext>
+            </div>
           </Card>
-          <Card title={t('input_parameter')} className='mb-4'>
-            <Form form={midForm}>
-              {variables.length > 0 &&
-                variables
-                  .filter(item => item !== 'out_schema')
-                  .map(item => (
-                    <Form.Item key={item} label={item} name={item} rules={[{ message: `${t('Please_Input')}${item}` }]}>
-                      <Input placeholder={t('Please_Input')} />
-                    </Form.Item>
-                  ))}
-            </Form>
-          </Card>
-          <Card title={t('output_structure')} className='flex flex-col flex-1'>
-            <JsonView
-              style={{ ...theme, width: '100%', padding: 4 }}
-              className={classNames({
-                'bg-[#fafafa]': mode === 'light',
-              })}
-              value={responseTemplate}
+        )}
+      </div>
+      <div className='flex flex-col gap-4 p-4 border-t border-[rgba(0,0,0,0.06)] dark:border-[rgba(255,255,255,0.5)]'>
+        <Card title={t('input_parameter')} className='mb-4'>
+          <Form form={midForm}>
+            {variables.length > 0 &&
+              variables
+                .filter(item => item !== 'out_schema')
+                .map(item => (
+                  <Form.Item key={item} label={item} name={item}>
+                    <Input placeholder={t('Please_Input')} />
+                  </Form.Item>
+                ))}
+          </Form>
+        </Card>
+        <Card title={t('output_structure')} className='mb-4'>
+          <div
+            className={classNames('rounded-lg p-4', {
+              'bg-[#fafafa]': mode === 'light',
+            })}
+          >
+            <ReactJson
+              theme={theme}
+              style={{ backgroundColor: 'transparent' }}
               enableClipboard={false}
               displayDataTypes={false}
-              objectSortKeys={false}
+              value={responseTemplate}
+              onEdit={edit => {
+                setResponseTemplate(edit.updated_src);
+              }}
+              onAdd={add => {
+                setResponseTemplate(add.updated_src);
+              }}
+              onDelete={del => {
+                setResponseTemplate(del.updated_src);
+              }}
             />
-            <div className='flex flex-col mt-4'>
-              <Form
-                form={bottomForm}
-                initialValues={{
-                  model: model,
-                  temperature: 0.5,
-                  prompt_language: 'en',
-                }}
-              >
-                <Form.Item label={t('model')} name='model'>
-                  <Select className='h-8 rounded-3xl' options={modelOptions} allowClear showSearch />
-                </Form.Item>
-                <Form.Item label={t('temperature')} name='temperature'>
-                  <TemperatureItem />
-                </Form.Item>
-                <Form.Item label={t('language')} name='prompt_language'>
-                  <Select
-                    options={[
-                      {
-                        label: t('English'),
-                        value: 'en',
-                      },
-                      {
-                        label: t('Chinese'),
-                        value: 'zh',
-                      },
-                    ]}
-                  />
-                </Form.Item>
-                <Form.Item label={t('User_input')} name='user_input'>
-                  <Input placeholder={t('Please_Input')} />
-                </Form.Item>
-              </Form>
-            </div>
-            <Space className='flex justify-between'>
-              <Button type='primary' onClick={onLLMTest} loading={llmLoading}>
-                {t('LLM_test')}
-              </Button>
-              <Button
-                type='primary'
-                onClick={async () => {
-                  if (verifyLoading || !history[0]?.context) {
-                    return;
-                  }
-                  await run();
-                }}
-              >
-                {t('Output_verification')}
-              </Button>
-            </Space>
-          </Card>
+          </div>
+        </Card>
+        <Card title={t('User_input')} className='mb-4'>
+          <Form form={bottomForm}>
+            <Form.Item label={t('model')} name='model'>
+              <Select options={modelOptions} />
+            </Form.Item>
+            <Form.Item label={t('temperature')} name='temperature'>
+              <TemperatureItem />
+            </Form.Item>
+            <Form.Item label={t('language')} name='prompt_language'>
+              <Select
+                options={[
+                  { label: 'English', value: 'en' },
+                  { label: 'Chinese', value: 'zh' },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={t('User_input')} name='user_input'>
+              <TextArea rows={4} placeholder={t('Please_fill_in_the_user_input')} />
+            </Form.Item>
+          </Form>
+        </Card>
+        <div className='flex justify-end gap-4'>
+          <Button onClick={() => router.back()}>{t('cancel')}</Button>
+          <Button onClick={onLLMTest} loading={llmLoading}>
+            {t('LLM_test')}
+          </Button>
+          <Button type='primary' onClick={operateFn} loading={operateLoading}>
+            {type === 'add' ? t('Add') : t('update')}
+          </Button>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

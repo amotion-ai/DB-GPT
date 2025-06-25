@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import React, { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Copy, Bot, User, Sparkles } from 'lucide-react';
 import Feedback from './Feedback';
 import RobotIcon from './RobotIcon';
 
@@ -24,19 +25,22 @@ const UserIcon: React.FC = () => {
 
   if (!user.avatar_url) {
     return (
-      <div className='flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-[#31afff] to-[#1677ff] text-xs text-white'>
-        {user?.nick_name}
+      <div className='flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 text-sm text-white font-medium shadow-lg'>
+        {user?.nick_name?.charAt(0)?.toUpperCase()}
       </div>
     );
   }
   return (
-    <Image
-      className='rounded-full border border-gray-200 object-contain bg-white inline-block'
-      width={32}
-      height={32}
-      src={user?.avatar_url}
-      alt={user?.nick_name}
-    />
+    <div className="relative">
+      <Image
+        className='rounded-full border-2 border-white/20 object-contain bg-white/10 backdrop-blur-sm shadow-lg'
+        width={40}
+        height={40}
+        src={user?.avatar_url}
+        alt={user?.nick_name}
+      />
+      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+    </div>
   );
 };
 
@@ -49,21 +53,25 @@ type DBGPTView = {
 
 type MarkdownComponent = Parameters<typeof GPTVis>['0']['components'];
 
-const pluginViewStatusMapper: Record<DBGPTView['status'], { bgClass: string; icon: React.ReactNode }> = {
+const pluginViewStatusMapper: Record<DBGPTView['status'], { bgClass: string; icon: React.ReactNode; textClass: string }> = {
   todo: {
-    bgClass: 'bg-gray-500',
+    bgClass: 'bg-gray-100 dark:bg-gray-800',
+    textClass: 'text-gray-600 dark:text-gray-400',
     icon: <ClockCircleOutlined className='ml-2' />,
   },
   runing: {
-    bgClass: 'bg-blue-500',
+    bgClass: 'bg-blue-50 dark:bg-blue-900/20',
+    textClass: 'text-blue-600 dark:text-blue-400',
     icon: <LoadingOutlined className='ml-2' />,
   },
   failed: {
-    bgClass: 'bg-red-500',
+    bgClass: 'bg-red-50 dark:bg-red-900/20',
+    textClass: 'text-red-600 dark:text-red-400',
     icon: <CloseOutlined className='ml-2' />,
   },
   completed: {
-    bgClass: 'bg-green-500',
+    bgClass: 'bg-green-50 dark:bg-green-900/20',
+    textClass: 'text-green-600 dark:text-green-400',
     icon: <CheckOutlined className='ml-2' />,
   },
 };
@@ -149,21 +157,24 @@ const ChatContent: React.FC<{
           return children;
         }
         const { name, status, err_msg, result } = cachePluginContext[index];
-        const { bgClass, icon } = pluginViewStatusMapper[status] ?? {};
+        const { bgClass, icon, textClass } = pluginViewStatusMapper[status] ?? {};
         return (
-          <div className='bg-white dark:bg-[#212121] rounded-lg overflow-hidden my-2 flex flex-col lg:max-w-[80%]'>
-            <div className={classNames('flex px-4 md:px-6 py-2 items-center text-white text-sm', bgClass)}>
-              {name}
+          <div className='bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden my-4 flex flex-col lg:max-w-[85%] border border-white/20 dark:border-gray-700/50 shadow-lg'>
+            <div className={classNames('flex px-6 py-3 items-center text-sm font-medium', bgClass, textClass)}>
+              <div className="flex items-center">
+                <Sparkles className="w-4 h-4 mr-2" />
+                {name}
+              </div>
               {icon}
             </div>
             {result ? (
-              <div className='px-4 md:px-6 py-4 text-sm'>
+              <div className='px-6 py-4 text-sm bg-white/50 dark:bg-gray-900/50'>
                 <GPTVis components={markdownComponents} {...markdownPlugins}>
                   {preprocessLaTeX(result ?? '')}
                 </GPTVis>
               </div>
             ) : (
-              <div className='px-4 md:px-6 py-4 text-sm'>{err_msg}</div>
+              <div className='px-6 py-4 text-sm bg-white/50 dark:bg-gray-900/50'>{err_msg}</div>
             )}
           </div>
         );
@@ -172,112 +183,161 @@ const ChatContent: React.FC<{
     [cachePluginContext],
   );
 
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      message.success(t('copy_success'));
+    } catch (err) {
+      message.error(t('copy_failed'));
+    }
+  };
+
   return (
-    <div className='flex flex-1 gap-3 mt-6'>
-      {/* icon */}
-      <div className='flex flex-shrink-0 items-start'>{isRobot ? <RobotIcon model={model_name} /> : <UserIcon />}</div>
-      <div className={`flex ${scene === 'chat_agent' && !thinking ? 'flex-1' : ''} overflow-hidden`}>
-        {/* 用户提问 */}
-        {!isRobot && (
-          <div className='flex flex-1 relative group'>
-            <div
-              className='flex-1 text-sm text-[#1c2533] dark:text-white'
-              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-            >
-              {typeof context === 'string' && (
-                <div>
-                  <GPTVis
-                    components={{
-                      ...markdownComponents,
-                      img: ({ src, alt, ...props }) => (
-                        <img
-                          src={src}
-                          alt={alt || 'image'}
-                          className='max-w-full md:max-w-[80%] lg:max-w-[70%] object-contain'
-                          style={{ maxHeight: '200px' }}
-                          {...props}
-                        />
-                      ),
-                    }}
-                    {...markdownPlugins}
-                  >
-                    {preprocessLaTeX(formatMarkdownVal(value))}
-                  </GPTVis>
-                </div>
-              )}
+    <div className='flex gap-4 mt-8 group hover:bg-white/5 dark:hover:bg-gray-800/5 rounded-2xl p-4 transition-all duration-300'>
+      {/* Avatar */}
+      <div className='flex flex-shrink-0 items-start pt-2'>
+        {isRobot ? (
+          <div className="relative">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+              <Bot className="w-5 h-5 text-white" />
             </div>
-            {typeof context === 'string' && context.trim() && (
-              <div className='absolute right-0 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
-                <button
-                  className='flex items-center justify-center w-8 h-8 text-[#525964] dark:text-[rgba(255,255,255,0.6)] hover:text-[#1677ff] dark:hover:text-white transition-colors'
-                  onClick={() => {
-                    if (typeof context === 'string') {
-                      navigator.clipboard
-                        .writeText(context)
-                        .then(() => {
-                          message.success(t('copy_to_clipboard_success'));
-                        })
-                        .catch(err => {
-                          console.error(t('copy_to_clipboard_failed'), err);
-                          message.error(t('copy_to_clipboard_failed'));
-                        });
-                    }
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+              <div className="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+          </div>
+        ) : (
+          <UserIcon />
+        )}
+      </div>
+
+      {/* Message Content */}
+      <div className={`flex flex-1 flex-col min-w-0 ${scene === 'chat_agent' && !thinking ? 'flex-1' : ''}`}>
+        {/* Message Header */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {isRobot ? 'AI Assistant' : 'You'}
+            </span>
+            {isRobot && model_name && (
+              <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">
+                {model_name}
+              </span>
+            )}
+          </div>
+          {!isRobot && (
+            <button
+              onClick={() => handleCopy(typeof context === 'string' ? context : '')}
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+            >
+              <Copy className="w-4 h-4 text-gray-500" />
+            </button>
+          )}
+        </div>
+
+        {/* Message Bubble */}
+        <div className={classNames(
+          'relative rounded-2xl p-6 shadow-sm transition-all duration-300',
+          isRobot 
+            ? 'bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-white/20 dark:border-gray-700/50' 
+            : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white'
+        )}>
+          {/* Thinking indicator */}
+          {thinking && (
+            <div className="flex items-center gap-2 mb-4 text-blue-600 dark:text-blue-400">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-current rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              </div>
+              <span className="text-sm">Thinking...</span>
+            </div>
+          )}
+
+          {/* Message Content */}
+          <div className={classNames(
+            'text-sm leading-relaxed',
+            isRobot ? 'text-gray-800 dark:text-gray-200' : 'text-white'
+          )}>
+            {!isRobot && typeof context === 'string' && (
+              <div className="whitespace-pre-wrap break-words">
+                <GPTVis
+                  components={{
+                    ...markdownComponents,
+                    img: ({ src, alt, ...props }) => (
+                      <img
+                        src={src}
+                        alt={alt || 'image'}
+                        className='max-w-full md:max-w-[80%] lg:max-w-[70%] object-contain rounded-lg shadow-md'
+                        style={{ maxHeight: '300px' }}
+                        {...props}
+                      />
+                    ),
                   }}
-                  title={t('copy_to_clipboard')}
+                  {...markdownPlugins}
                 >
-                  <CopyOutlined />
-                </button>
+                  {formatMarkdownValForAgent(context)}
+                </GPTVis>
+              </div>
+            )}
+
+            {isRobot && typeof context === 'string' && (
+              <div className="whitespace-pre-wrap break-words">
+                <GPTVis
+                  components={{
+                    ...markdownComponents,
+                    ...extraMarkdownComponents,
+                    img: ({ src, alt, ...props }) => (
+                      <img
+                        src={src}
+                        alt={alt || 'image'}
+                        className='max-w-full md:max-w-[80%] lg:max-w-[70%] object-contain rounded-lg shadow-md'
+                        style={{ maxHeight: '300px' }}
+                        {...props}
+                      />
+                    ),
+                    code: ({ children, ...props }) => (
+                      <code
+                        {...props}
+                        className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-sm font-mono"
+                      >
+                        {children}
+                      </code>
+                    ),
+                    pre: ({ children, ...props }) => (
+                      <pre
+                        {...props}
+                        className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg overflow-x-auto my-4"
+                      >
+                        {children}
+                      </pre>
+                    ),
+                  }}
+                  {...markdownPlugins}
+                >
+                  {formatMarkdownValForAgent(value)}
+                </GPTVis>
+              </div>
+            )}
+
+            {typeof context !== 'string' && (
+              <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-800">
+                <h3 className="font-semibold text-purple-800 dark:text-purple-300 mb-2">
+                  {context.template_name}
+                </h3>
+                <p className="text-purple-700 dark:text-purple-400 text-sm">
+                  {context.template_introduce}
+                </p>
               </div>
             )}
           </div>
-        )}
-        {/* ai回答 */}
-        {isRobot && (
-          <div className='flex flex-1 flex-col w-full'>
-            <div className='bg-white dark:bg-[rgba(255,255,255,0.16)] p-4 rounded-2xl rounded-tl-none mb-2'>
-              {typeof context === 'object' && (
-                <div>
-                  {`[${context.template_name}]: `}
-                  <span className='text-theme-primary cursor-pointer' onClick={onLinkClick}>
-                    <CodeOutlined className='mr-1' />
-                    {context.template_introduce || 'More Details'}
-                  </span>
-                </div>
-              )}
-              {typeof context === 'string' && scene === 'chat_agent' && (
-                <GPTVis components={markdownComponents} {...markdownPlugins}>
-                  {preprocessLaTeX(formatMarkdownValForAgent(value))}
-                </GPTVis>
-              )}
-              {typeof context === 'string' && scene !== 'chat_agent' && (
-                <div>
-                  <GPTVis
-                    components={{
-                      ...markdownComponents,
-                      ...extraMarkdownComponents,
-                    }}
-                    {...markdownPlugins}
-                  >
-                    {preprocessLaTeX(formatMarkdownVal(value))}
-                  </GPTVis>
-                </div>
-              )}
-              {/* 正在思考 */}
-              {thinking && !context && (
-                <div className='flex items-center gap-2'>
-                  <span className='flex text-sm text-[#1c2533] dark:text-white'>{t('thinking')}</span>
-                  <div className='flex'>
-                    <div className='w-1 h-1 rounded-full mx-1 animate-pulse1'></div>
-                    <div className='w-1 h-1 rounded-full mx-1 animate-pulse2'></div>
-                    <div className='w-1 h-1 rounded-full mx-1 animate-pulse3'></div>
-                  </div>
-                </div>
-              )}
+
+          {/* Feedback Section */}
+          {isRobot && !thinking && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Feedback content={content} />
             </div>
-            {/* 用户反馈 */}
-            <Feedback content={content} />
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

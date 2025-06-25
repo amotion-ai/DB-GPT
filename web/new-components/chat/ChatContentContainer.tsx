@@ -1,6 +1,6 @@
 import ChatHeader from '@/new-components/chat/header/ChatHeader';
 import { ChatContentContext } from '@/pages/chat';
-import { ArrowDown, ArrowUp } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronUp, ChevronDown } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
@@ -99,31 +99,54 @@ const ChatContentContainer = ({}, ref: React.ForwardedRef<any>) => {
 
   return (
     <div className='flex flex-1 overflow-hidden relative'>
-      <div ref={scrollRef} className='h-full w-full mx-auto overflow-y-auto'>
+      {/* Main Content Area */}
+      <div 
+        ref={scrollRef} 
+        className='h-full w-full mx-auto overflow-y-auto scroll-smooth'
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(156, 163, 175, 0.5) transparent'
+        }}
+      >
         <ChatHeader isScrollToTop={isScrollToTop} />
         <ChatCompletion />
       </div>
 
+      {/* Enhanced Scroll Buttons */}
       {showScrollButtons && (
-        <div className='absolute right-6 bottom-24 flex flex-col gap-2'>
+        <div className='absolute right-6 bottom-24 flex flex-col gap-3 z-10'>
           {!isAtTop && (
             <button
               onClick={scrollToTop}
-              className='w-10 h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow'
+              className='group relative w-12 h-12 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-white/30 dark:border-gray-700/50 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110'
               aria-label='Scroll to top'
             >
-              <ArrowUp className="w-5 h-5" />
+              <ChevronUp className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           )}
           {!isAtBottom && (
             <button
               onClick={scrollToBottom}
-              className='w-10 h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-shadow'
+              className='group relative w-12 h-12 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-white/30 dark:border-gray-700/50 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110'
               aria-label='Scroll to bottom'
             >
-              <ArrowDown className="w-5 h-5" />
+              <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
           )}
+        </div>
+      )}
+
+      {/* Scroll Progress Indicator */}
+      {showScrollButtons && (
+        <div className="absolute right-8 top-1/2 transform -translate-y-1/2 w-1 h-20 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div 
+            className="w-full bg-gradient-to-b from-blue-500 to-purple-600 rounded-full transition-all duration-300"
+            style={{
+              height: scrollRef.current ? `${(scrollRef.current.scrollTop / (scrollRef.current.scrollHeight - scrollRef.current.clientHeight)) * 100}%` : '0%'
+            }}
+          ></div>
         </div>
       )}
     </div>

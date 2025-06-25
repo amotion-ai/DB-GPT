@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useRequest } from 'ahooks';
 import AppDefaultIcon from '../../common/AppDefaultIcon';
-import { Share2, Loader2, Star } from 'lucide-react';
+import { Share2, Loader2, Star, Sparkles, MessageSquare, Zap } from 'lucide-react';
 
 const tagColors = ['magenta', 'orange', 'geekblue', 'purple', 'cyan', 'green'];
 
@@ -58,21 +58,29 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
   // 正常header
   const headerContent = () => {
     return (
-      <header className='flex items-center justify-between w-5/6 h-full px-6  bg-[#ffffff99] border dark:bg-[rgba(255,255,255,0.1)] dark:border-[rgba(255,255,255,0.1)] rounded-2xl mx-auto transition-all duration-400 ease-in-out relative'>
-        <div className='flex items-center'>
-          <div className='flex w-12 h-12 justify-center items-center rounded-xl mr-4 bg-white'>
-            <AppDefaultIcon scene={appScene} width={16} height={16} />
+      <header className='flex items-center justify-between w-full max-w-6xl mx-auto px-6 py-4 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-white/30 dark:border-gray-700/50 rounded-2xl shadow-lg transition-all duration-300 ease-in-out relative'>
+        <div className='flex items-center flex-1 min-w-0'>
+          <div className='flex w-14 h-14 justify-center items-center rounded-xl mr-4 bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg'>
+            <AppDefaultIcon scene={appScene} width={20} height={20} />
           </div>
-          <div className='flex flex-col flex-1'>
-            <div className='flex items-center text-base text-[#1c2533] dark:text-[rgba(255,255,255,0.85)] font-semibold gap-2'>
-              <span>{appInfo?.app_name}</span>
-              <div className='flex gap-1'>
-                {appInfo?.team_mode && <Tag color='green'>{appInfo?.team_mode}</Tag>}
-                {appInfo?.team_context?.chat_scene && <Tag color='cyan'>{appInfo?.team_context?.chat_scene}</Tag>}
+          <div className='flex flex-col flex-1 min-w-0'>
+            <div className='flex items-center text-lg text-gray-800 dark:text-gray-200 font-semibold gap-3 mb-1'>
+              <span className="truncate">{appInfo?.app_name}</span>
+              <div className='flex gap-2 flex-shrink-0'>
+                {appInfo?.team_mode && (
+                  <Tag color='green' className="text-xs px-2 py-1 rounded-full">
+                    {appInfo?.team_mode}
+                  </Tag>
+                )}
+                {appInfo?.team_context?.chat_scene && (
+                  <Tag color='cyan' className="text-xs px-2 py-1 rounded-full">
+                    {appInfo?.team_context?.chat_scene}
+                  </Tag>
+                )}
               </div>
             </div>
             <Typography.Text
-              className='text-sm text-[#525964] dark:text-[rgba(255,255,255,0.65)] leading-6'
+              className='text-sm text-gray-600 dark:text-gray-400 leading-6 truncate'
               ellipsis={{
                 tooltip: true,
               }}
@@ -81,107 +89,113 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
             </Typography.Text>
           </div>
         </div>
-        <div className='flex items-center gap-4'>
-          <div
+        
+        <div className='flex items-center gap-3 ml-4'>
+          <button
             onClick={async () => {
               await operate();
             }}
-            className='flex items-center justify-center w-10 h-10 bg-[#ffffff99] dark:bg-[rgba(255,255,255,0.2)] border border-white dark:border-[rgba(255,255,255,0.2)] rounded-[50%] cursor-pointer'
+            className='group flex items-center justify-center w-12 h-12 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-white/30 dark:border-gray-600/50 rounded-full cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105'
           >
             {loading ? (
-              <Spin spinning={loading} indicator={<Loader2 className="w-5 h-5 animate-spin" />} />
+              <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
             ) : (
-              <>
-                {isCollected ? (
-                  <Star className="w-5 h-5 fill-current" />
-                ) : (
-                  <Star className="w-5 h-5" />
-                )}
-              </>
+              <Star className={`w-5 h-5 transition-colors ${isCollected ? 'text-yellow-500 fill-current' : 'text-gray-500 group-hover:text-yellow-500'}`} />
             )}
-          </div>
-          <div
+          </button>
+          <button
             onClick={shareApp}
-            className='flex items-center justify-center w-10 h-10 bg-[#ffffff99] dark:bg-[rgba(255,255,255,0.2)] border border-white dark:border-[rgba(255,255,255,0.2)] rounded-[50%] cursor-pointer'
+            className='group flex items-center justify-center w-12 h-12 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-white/30 dark:border-gray-600/50 rounded-full cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105'
           >
-            <Share2 className="w-5 h-5" />
-          </div>
+            <Share2 className="w-5 h-5 text-gray-500 group-hover:text-blue-600 transition-colors" />
+          </button>
         </div>
+
+        {/* Recommended Questions */}
         {!!appInfo?.recommend_questions?.length && (
-          <div className='absolute  bottom-[-40px] left-0'>
-            <span className='text-sm text-[#525964] dark:text-[rgba(255,255,255,0.65)] leading-6'>或许你想问：</span>
-            {appInfo.recommend_questions.map((item, index) => (
-              <Tag
-                key={item.id}
-                color={tagColors[index]}
-                className='text-xs p-1 px-2 cursor-pointer'
-                onClick={async () => {
-                  handleChat(item?.question || '', {
-                    app_code: appInfo.app_code,
-                    ...(paramKey.includes('temperature') && { temperature: temperatureValue }),
-                    ...(paramKey.includes('resource') && {
-                      select_param:
-                        typeof resourceValue === 'string'
-                          ? resourceValue
-                          : JSON.stringify(resourceValue) || currentDialogue.select_param,
-                    }),
-                  });
-                  setTimeout(() => {
-                    scrollRef.current?.scrollTo({
-                      top: scrollRef.current?.scrollHeight,
-                      behavior: 'smooth',
+          <div className='absolute bottom-[-60px] left-0 right-0'>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-blue-600" />
+              <span className='text-sm text-gray-600 dark:text-gray-400 font-medium'>Suggested questions:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {appInfo.recommend_questions.map((item, index) => (
+                <button
+                  key={item.id}
+                  className='group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-white/30 dark:border-gray-700/50 rounded-full px-4 py-2 text-xs text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-300 hover:scale-105 cursor-pointer'
+                  onClick={async () => {
+                    handleChat(item?.question || '', {
+                      app_code: appInfo.app_code,
+                      ...(paramKey.includes('temperature') && { temperature: temperatureValue }),
+                      ...(paramKey.includes('resource') && {
+                        select_param:
+                          typeof resourceValue === 'string'
+                            ? resourceValue
+                            : JSON.stringify(resourceValue) || currentDialogue.select_param,
+                      }),
                     });
-                  }, 0);
-                }}
-              >
-                {item.question}
-              </Tag>
-            ))}
+                    setTimeout(() => {
+                      scrollRef.current?.scrollTo({
+                        top: scrollRef.current?.scrollHeight,
+                        behavior: 'smooth',
+                      });
+                    }, 0);
+                  }}
+                >
+                  {item.question}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </header>
     );
   };
+
   // 吸顶header
   const topHeaderContent = () => {
     return (
-      <header className='flex items-center justify-between w-full h-14 bg-[#ffffffb7] dark:bg-[rgba(41,63,89,0.4)]  px-8 transition-all duration-500 ease-in-out'>
-        <div className='flex items-center'>
-          <div className='flex items-center justify-center w-8 h-8 rounded-lg mr-2 bg-white'>
-            <AppDefaultIcon scene={appScene} />
+      <header className='flex items-center justify-between w-full h-16 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl border-b border-white/30 dark:border-gray-700/50 px-6 transition-all duration-300 ease-in-out shadow-sm'>
+        <div className='flex items-center flex-1 min-w-0'>
+          <div className='flex items-center justify-center w-10 h-10 rounded-lg mr-3 bg-gradient-to-br from-blue-500 to-purple-600 shadow-md'>
+            <AppDefaultIcon scene={appScene} width={16} height={16} />
           </div>
-          <div className='flex items-center text-base text-[#1c2533] dark:text-[rgba(255,255,255,0.85)] font-semibold gap-2'>
-            <span>{appInfo?.app_name}</span>
-            <div className='flex gap-1'>
-              {appInfo?.team_mode && <Tag color='green'>{appInfo?.team_mode}</Tag>}
-              {appInfo?.team_context?.chat_scene && <Tag color='cyan'>{appInfo?.team_context?.chat_scene}</Tag>}
+          <div className='flex items-center text-base text-gray-800 dark:text-gray-200 font-semibold gap-3 min-w-0'>
+            <span className="truncate">{appInfo?.app_name}</span>
+            <div className='flex gap-2 flex-shrink-0'>
+              {appInfo?.team_mode && (
+                <Tag color='green' className="text-xs px-2 py-1 rounded-full">
+                  {appInfo?.team_mode}
+                </Tag>
+              )}
+              {appInfo?.team_context?.chat_scene && (
+                <Tag color='cyan' className="text-xs px-2 py-1 rounded-full">
+                  {appInfo?.team_context?.chat_scene}
+                </Tag>
+              )}
             </div>
           </div>
         </div>
-        <div
-          className='flex gap-8'
-          onClick={async () => {
-            await operate();
-          }}
-        >
-          {loading ? (
-            <Spin spinning={loading} indicator={<Loader2 className="w-5 h-5 animate-spin" />} />
-          ) : (
-            <>
-              {isCollected ? (
-                <Star className="w-5 h-5 fill-current" />
-              ) : (
-                <Star className="w-5 h-5" />
-              )}
-            </>
-          )}
-          <Share2
-            className='text-lg'
-            onClick={e => {
-              e.stopPropagation();
-              shareApp();
+        
+        <div className='flex items-center gap-3'>
+          <button
+            onClick={async () => {
+              await operate();
             }}
-          />
+            className='group flex items-center justify-center w-10 h-10 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-white/30 dark:border-gray-600/50 rounded-full cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105'
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+            ) : (
+              <Star className={`w-4 h-4 transition-colors ${isCollected ? 'text-yellow-500 fill-current' : 'text-gray-500 group-hover:text-yellow-500'}`} />
+            )}
+          </button>
+          <button
+            onClick={shareApp}
+            className='group flex items-center justify-center w-10 h-10 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border border-white/30 dark:border-gray-600/50 rounded-full cursor-pointer hover:shadow-md transition-all duration-300 hover:scale-105'
+          >
+            <Share2 className="w-4 h-4 text-gray-500 group-hover:text-blue-600 transition-colors" />
+          </button>
         </div>
       </header>
     );
@@ -190,8 +204,8 @@ const ChatHeader: React.FC<{ isScrollToTop: boolean }> = ({ isScrollToTop }) => 
   return (
     <div
       className={`h-20 mt-6 ${
-        appInfo?.recommend_questions && appInfo?.recommend_questions?.length > 0 ? 'mb-6' : ''
-      } sticky top-0 bg-transparent z-30 transition-all duration-400 ease-in-out`}
+        appInfo?.recommend_questions && appInfo?.recommend_questions?.length > 0 ? 'mb-8' : 'mb-4'
+      } sticky top-0 bg-transparent z-30 transition-all duration-300 ease-in-out`}
     >
       {isScrollToTop ? topHeaderContent() : headerContent()}
     </div>

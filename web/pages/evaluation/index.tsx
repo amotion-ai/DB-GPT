@@ -38,6 +38,7 @@ import {
 } from 'antd';
 import { valueType } from 'antd/es/statistic/utils';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
 const { useWatch } = Form;
@@ -76,6 +77,7 @@ interface EvaluationItemType {
   gmt_modified: string;
 }
 const Evaluation = () => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataSetModalOpen, setIsDataSetModalOpen] = useState(false);
   const [evaluationList, setEvaluationList] = useState<EvaluationItemType[]>([]);
@@ -230,37 +232,36 @@ const Evaluation = () => {
 
   const columns: TableProps<DataSetItemType>['columns'] = [
     {
-      title: '名称',
+      title: t('Name'),
       dataIndex: 'name',
       key: 'name',
       width: '10%',
       fixed: 'left',
     },
     {
-      title: '编码',
+      title: t('Code'),
       dataIndex: 'code',
       key: 'code',
       width: '20%',
       // render: (text) => <a>{text}</a>,
     },
     {
-      title: '储存方式',
+      title: t('Storage_Type'),
       dataIndex: 'storage_type',
       key: 'storage_type',
     },
     {
-      title: '数据集数量',
+      title: t('Dataset_Count'),
       dataIndex: 'datasets_count',
       key: 'datasets_count',
     },
-
     {
-      title: '创建时间',
+      title: t('Create_Time'),
       dataIndex: 'gmt_create',
       key: 'gmt_create',
     },
     {
-      title: '成员',
+      title: t('Members'),
       dataIndex: 'members',
       key: 'members',
       width: '10%',
@@ -271,17 +272,17 @@ const Evaluation = () => {
       },
     },
     {
-      title: '更新时间',
+      title: t('Update_Time'),
       dataIndex: 'gmt_modified',
       key: 'gmt_modified',
     },
     {
-      title: 'Action',
+      title: t('Actions'),
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
           <Popconfirm
-            title='确认删除吗'
+            title={t('Confirm_Delete')}
             onConfirm={async () => {
               const [, , res] = await apiInterceptors(
                 delDataSet({
@@ -289,12 +290,12 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('删除成功');
+                message.success(t('Delete_Success'));
                 getDataSetsRefresh();
               }
             }}
           >
-            <Button type='link'>删除</Button>
+            <Button type='link'>{t('Delete')}</Button>
           </Popconfirm>
           <Button
             type='link'
@@ -308,7 +309,7 @@ const Evaluation = () => {
               });
             }}
           >
-            编辑
+            {t('Edit')}
           </Button>
           <Button
             type='link'
@@ -320,47 +321,43 @@ const Evaluation = () => {
               });
               const contentType = response.headers['content-type'];
               if (contentType.includes('application/json')) {
-                // 如果是 JSON，解析错误信息
+                // If it's JSON, parse error message
                 const reader = new FileReader();
                 reader.onload = () => {
                   try {
                     const error = JSON.parse(reader.result as string);
                     message.error(error.err_msg);
-                    // 在页面或通知系统中展示错误信息
+                    // Display error message in page or notification system
                   } catch (parseError) {
                     console.error('Failed to parse error response:', parseError);
                   }
                 };
                 reader.readAsText(response.data as any);
               } else {
-                // 从响应头中获取文件名
+                // Get filename from response header
                 const contentDisposition = response.headers['content-disposition'];
-                let filename = 'downloaded_file.xlsx';
+                let filename = 'dataset.json';
                 if (contentDisposition) {
-                  const match = contentDisposition.match(/filename\*?="?(.+)"/);
-                  if (match[1]) {
-                    filename = decodeURIComponent(match[1]);
+                  const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+                  if (filenameMatch) {
+                    filename = filenameMatch[1];
                   }
                 }
-
-                // 创建 URL 并触发下载
-                const url = window.URL.createObjectURL(
-                  new Blob([response.data as any], {
-                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                  }),
-                );
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url); // 释放内存
+                // Create URL and trigger download
+                const blob = new Blob([response.data], { type: contentType });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url); // Free memory
               }
               setCommonLoading(false);
             }}
           >
-            下载
+            {t('Download')}
           </Button>
         </Space>
       ),
@@ -370,7 +367,7 @@ const Evaluation = () => {
    */
   const evaluationsColumns: TableProps<EvaluationItemType>['columns'] = [
     {
-      title: '数据集名称',
+      title: t('Dataset_Name'),
       dataIndex: 'datasets_name',
       key: 'datasets_name',
       fixed: 'left',
@@ -387,7 +384,7 @@ const Evaluation = () => {
       ),
     },
     {
-      title: '测评状态',
+      title: t('Evaluation_Status'),
       dataIndex: 'state',
       key: 'state',
       render: text => {
@@ -395,28 +392,27 @@ const Evaluation = () => {
       },
     },
     {
-      title: '测评编码',
+      title: t('Evaluation_Code'),
       dataIndex: 'evaluate_code',
       key: 'evaluate_code',
     },
     {
-      title: '场景',
+      title: t('Scene'),
       dataIndex: 'scene_key',
       key: 'scene_key',
     },
-
     {
-      title: '测评指标',
+      title: t('Evaluation_Metrics'),
       dataIndex: 'evaluate_metrics',
       key: 'evaluate_metrics',
     },
     {
-      title: '创建时间',
+      title: t('Create_Time'),
       dataIndex: 'gmt_create',
       key: 'gmt_create',
     },
     {
-      title: '更新时间',
+      title: t('Update_Time'),
       dataIndex: 'gmt_modified',
       key: 'gmt_modified',
     },
@@ -424,8 +420,8 @@ const Evaluation = () => {
     {
       title: (
         <span className='w-[50px]'>
-          <span className='text-nowrap'>详情</span>
-          <Tooltip placement='topLeft' title='查看日志与评分'>
+          <span className='text-nowrap'>Details</span>
+          <Tooltip placement='topLeft' title={t('View_Log_And_Score')}>
             <InfoCircleOutlined />
           </Tooltip>
         </span>
@@ -439,7 +435,7 @@ const Evaluation = () => {
       ),
     },
     {
-      title: '测评结果',
+      title: t('Evaluation_Result'),
       key: 'result',
       render: (_, record) => (
         <>
@@ -452,7 +448,7 @@ const Evaluation = () => {
               });
             }}
           >
-            评分明细
+            {t('View_Detailed_Score')}
           </Button>
           <Button
             type='link'
@@ -465,20 +461,20 @@ const Evaluation = () => {
               const contentType = response.headers['content-type'];
 
               if (contentType.includes('application/json')) {
-                // 如果是 JSON，解析错误信息
+                // If it's JSON, parse error message
                 const reader = new FileReader();
                 reader.onload = () => {
                   try {
                     const error = JSON.parse(reader.result as string);
                     message.error(error.err_msg);
-                    // 在页面或通知系统中展示错误信息
+                    // Display error message in page or notification system
                   } catch (parseError) {
                     console.error('Failed to parse error response:', parseError);
                   }
                 };
                 reader.readAsText(response.data as any);
               } else {
-                // 从响应头中获取文件名
+                // Get filename from response header
                 const contentDisposition = response.headers['content-disposition'];
                 let filename = 'downloaded_file.xlsx';
                 if (contentDisposition) {
@@ -488,7 +484,7 @@ const Evaluation = () => {
                   }
                 }
 
-                // 创建 URL 并触发下载
+                // Create URL and trigger download
                 const url = window.URL.createObjectURL(
                   new Blob([response.data as any], {
                     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -500,24 +496,24 @@ const Evaluation = () => {
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
-                window.URL.revokeObjectURL(url); // 释放内存
+                window.URL.revokeObjectURL(url); // Free memory
               }
               setCommonLoading(false);
             }}
           >
-            下载
+            {t('Download')}
           </Button>
         </>
       ),
     },
     {
-      title: '操作',
+      title: t('Actions'),
       key: 'action',
       width: '25%',
       render: (_, record) => (
         <>
           <Popconfirm
-            title='确认删除吗'
+            title={t('Confirm_Delete')}
             onConfirm={async () => {
               const [, , res] = await apiInterceptors(
                 delEvaluation({
@@ -525,12 +521,12 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('删除成功');
+                message.success(t('Delete_Success'));
                 getEvaluationsRefresh();
               }
             }}
           >
-            <Button type='link'>删除</Button>
+            <Button type='link'>{t('Delete')}</Button>
           </Popconfirm>
         </>
       ),
@@ -556,11 +552,11 @@ const Evaluation = () => {
             className='backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border-2 border-white rounded-lg shadow p-1 dark:border-[#6f7f95] dark:bg-[#6f7f95] dark:bg-opacity-60'
             options={[
               {
-                label: '评测数据',
+                label: 'Evaluation Data',
                 value: 'evaluations',
               },
               {
-                label: '数据集',
+                label: 'Dataset',
                 value: 'dataSet',
               },
             ]}
@@ -579,7 +575,7 @@ const Evaluation = () => {
                     setIsAddDataSet(true);
                   }}
                 >
-                  添加数据集
+                  {t('Add_Dataset')}
                 </Button>
               </div>
               <Table
@@ -605,7 +601,7 @@ const Evaluation = () => {
                     setIsModalOpen(true);
                   }}
                 >
-                  发起评测
+                  {t('Initiate_Evaluation')}
                 </Button>
               </div>
               <Table
@@ -654,7 +650,7 @@ const Evaluation = () => {
             </>
           )}
           <Modal
-            title='发起测评'
+            title={t('Initiate_Evaluation')}
             open={isModalOpen}
             onOk={async () => {
               const values = await form.validateFields();
@@ -666,7 +662,7 @@ const Evaluation = () => {
                   }),
                 );
                 if (res?.success) {
-                  message.success('发起成功');
+                  message.success(t('Create_Success'));
                   getEvaluationsRefresh();
                   form.resetFields();
                 }
@@ -687,7 +683,7 @@ const Evaluation = () => {
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
             >
-              <Form.Item name='scene_key' label='场景类型' rules={[{ required: true }]}>
+              <Form.Item name='scene_key' label={t('Scene_Type')} rules={[{ required: true }]}>
                 <Select
                   options={[
                     {
@@ -728,7 +724,7 @@ const Evaluation = () => {
                   }}
                 ></Select>
               </Form.Item>
-              <Form.Item name='scene_value' label='场景参数' rules={[{ required: true }]}>
+              <Form.Item name='scene_value' label={t('Scene_Parameter')} rules={[{ required: true }]}>
                 <Select
                   loading={sceneValueOptionLoading}
                   disabled={sceneValueOptionLoading}
@@ -743,15 +739,15 @@ const Evaluation = () => {
                   }}
                 ></Select>
               </Form.Item>
-              <Form.Item name='parallel_num' label='并行参数' rules={[{ required: true }]} initialValue={1}>
+              <Form.Item name='parallel_num' label={t('Parallel_Parameter')} rules={[{ required: true }]} initialValue={1}>
                 <Input></Input>
               </Form.Item>
-              <Form.Item name='datasets' label='数据集' rules={[{ required: true }]}>
+              <Form.Item name='datasets' label={t('Dataset')} rules={[{ required: true }]}>
                 <Select options={dataSetsOptions}></Select>
               </Form.Item>
               <Form.Item
                 name='evaluate_metrics'
-                label='评测指标'
+                label={t('Evaluation_Metrics')}
                 rules={[{ required: useWatch('scene_key', form) === 'app' }]}
               >
                 <Select loading={getMetricsLoading} disabled={getMetricsLoading} options={metricOptions}></Select>
@@ -759,7 +755,7 @@ const Evaluation = () => {
             </Form>
           </Modal>
           <Modal
-            title={isAddDataSet ? '添加数据集' : '编辑数据集'}
+            title={isAddDataSet ? t('Add_Dataset') : t('Edit_Dataset')}
             open={isDataSetModalOpen}
             confirmLoading={dataSetModalLoading}
             onOk={() => {
@@ -768,26 +764,26 @@ const Evaluation = () => {
                 if (isAddDataSet) {
                   const storageType = values.storage_type;
                   if (storageType === 'oss') {
-                    // 创建FormData对象
+                    // CreateFormData object
                     const formData = new FormData();
                     formData.append('dataset_name', values.dataset_name);
                     values.members && formData.append('members', values.members.join(','));
 
-                    const file = values.doc_file.file; // 获取文件对象
+                    const file = values.doc_file.file; // Get file object
                     formData.append('doc_file', file, file.name);
 
                     uploadDataSetsFile(formData)
                       .then(response => {
                         if (response.data.success) {
-                          message.success('上传成功');
+                          message.success(t('Upload_Success'));
                           runGetDataSets();
                         } else {
-                          message.error(response.data.err_msg);
+                          message.error(response.data.err_msg || t('Upload_Failed'));
                         }
                       })
                       .catch(error => {
-                        console.error('上传失败', error);
-                        message.error(error?.response?.data?.err_msg || '上传失败');
+                        console.error('Upload_Failed', error);
+                        message.error(error?.response?.data?.err_msg || t('Upload_Failed'));
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -801,15 +797,15 @@ const Evaluation = () => {
                     })
                       .then(res => {
                         if (res.data.success) {
-                          message.success('上传成功');
+                          message.success(t('Upload_Success'));
                           runGetDataSets();
                         } else {
-                          message.error(res.data.err_msg);
+                          message.error(res.data.err_msg || t('Upload_Failed'));
                         }
                       })
                       .catch(err => {
                         console.log(err);
-                        message.error(err?.response?.data?.err_msg || '上传失败');
+                        message.error(err?.response?.data?.err_msg || t('Upload_Failed'));
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -824,15 +820,15 @@ const Evaluation = () => {
                   })
                     .then(res => {
                       if (res.data.success) {
-                        message.success('更新成功');
+                        message.success(t('Update_Success'));
                         runGetDataSets();
                       } else {
-                        message.error(res.data.err_msg);
+                        message.error(res.data.err_msg || t('Update_Failed'));
                       }
                     })
                     .catch(err => {
                       console.log(err);
-                      message.error('更新失败');
+                      message.error(t('Update_Failed'));
                     })
                     .finally(() => {
                       setIsDataSetModalOpen(false);
@@ -853,19 +849,19 @@ const Evaluation = () => {
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
             >
-              <Form.Item name='dataset_name' label='名称' rules={[{ required: true }]}>
+              <Form.Item name='dataset_name' label={t('Name')} rules={[{ required: true }]}>
                 <Input disabled={!isAddDataSet} />
               </Form.Item>
-              <Form.Item name='members' label='成员'>
+              <Form.Item name='members' label={t('Members')}>
                 <Select mode='tags' />
               </Form.Item>
               {isAddDataSet && (
-                <Form.Item name='storage_type' label='储存类型' rules={[{ required: true }]}>
+                <Form.Item name='storage_type' label={t('Storage_Type')} rules={[{ required: true }]}>
                   <Select options={storageTypeOptions} />
                 </Form.Item>
               )}
               {useWatch('storage_type', dataSetForm) === 'oss' && isAddDataSet && (
-                <Form.Item name='doc_file' label='doc_file' rules={[{ required: true }]}>
+                <Form.Item name='doc_file' label={t('doc_file')} rules={[{ required: true }]}>
                   <Upload
                     name='dataSet'
                     maxCount={1}
@@ -881,19 +877,19 @@ const Evaluation = () => {
                       });
                     }}
                   >
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    <Button icon={<UploadOutlined />}>{t('Click_to_Upload')}</Button>
                   </Upload>
                 </Form.Item>
               )}
               {useWatch('storage_type', dataSetForm) === 'db' && isAddDataSet && (
-                <Form.Item name='content' label='content' rules={[{ required: true }]}>
+                <Form.Item name='content' label={t('content')} rules={[{ required: true }]}>
                   <TextArea rows={8} />
                 </Form.Item>
               )}
             </Form>
           </Modal>
           <Modal
-            title='评分明细'
+            title={t('Evaluation_Details')}
             open={isModalVisible}
             onOk={handleModalClose}
             onCancel={handleModalClose}
@@ -909,7 +905,7 @@ const Evaluation = () => {
             }}
             footer={[
               <Button key='back' onClick={handleModalClose}>
-                返回
+                {t('Return')}
               </Button>,
             ]}
           >
@@ -924,7 +920,7 @@ const Evaluation = () => {
               }}
               dataSource={evaluationShowData}
               rowKey='code'
-              pagination={false} // 禁用分页
+              pagination={false} // Disable pagination
             />
           </Modal>
         </div>
